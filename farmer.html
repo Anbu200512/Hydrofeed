@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>HydroFeed | Farmer Dashboard - Feed Management System</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232B9348'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13L16,10L11,7Z'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#2B9348',
+                        secondary: '#1E7E34',
+                        darkBg: '#0F172A'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'monospace']
+                    }
+                } 
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+            background: #F3F4F6;
+        }
+        
+        body.dark {
+            background: #0F172A;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2B9348;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            transition: all 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+        body.dark .sidebar {
+            background: #1E293B;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        }
+        [dir="rtl"] .sidebar {
+            left: auto;
+            right: 0;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        [dir="rtl"] .main-content {
+            margin-left: 0;
+            margin-right: 280px;
+        }
+        
+        /* Fixed Top Bar */
+        .top-bar-fixed {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: #F9FAFB;
+            border-bottom: 1px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+        body.dark .top-bar-fixed {
+            background: #0F172A;
+            border-bottom-color: #334155;
+        }
+        
+        /* Scrollable Content */
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            scroll-behavior: smooth;
+        }
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: #2B9348;
+            border-radius: 10px;
+        }
+        .dark .scrollable-content::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 200;
+            }
+            [dir="rtl"] .sidebar {
+                transform: translateX(100%);
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            [dir="rtl"] .main-content {
+                margin-right: 0;
+            }
+        }
+        
+        /* Navigation */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            margin: 4px 12px;
+            border-radius: 12px;
+            color: #4B5563;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        body.dark .nav-item {
+            color: #94A3B8;
+        }
+        .nav-item:hover {
+            background: rgba(43, 147, 72, 0.1);
+            color: #2B9348;
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+        }
+        .nav-item i {
+            width: 22px;
+            font-size: 1.2rem;
+        }
+        
+        /* Cards */
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        body.dark .stat-card {
+            background: #1E293B;
+            border-color: #334155;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        body.dark .data-table th, body.dark .data-table td {
+            border-bottom-color: #334155;
+        }
+        .data-table th {
+            font-weight: 600;
+            color: #374151;
+        }
+        body.dark .data-table th {
+            color: #E2E8F0;
+        }
+        .data-table td {
+            color: #6B7280;
+        }
+        body.dark .data-table td {
+            color: #CBD5E1;
+        }
+        
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .badge-success { background: rgba(43, 147, 72, 0.15); color: #2B9348; }
+        .badge-warning { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+        .badge-danger { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
+        .badge-info { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
+        
+        /* Profile Dropdown */
+        .profile-dropdown { position: relative; }
+        .profile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease;
+            z-index: 50;
+            border: 1px solid #e5e7eb;
+        }
+        body.dark .profile-menu {
+            background: #1E293B;
+            border-color: #334155;
+        }
+        .profile-dropdown:hover .profile-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            color: #4B5563;
+        }
+        body.dark .profile-menu-item {
+            color: #CBD5E1;
+        }
+        .profile-menu-item:hover {
+            background: rgba(43, 147, 72, 0.1);
+            color: #2B9348;
+        }
+        
+        /* Action Buttons */
+        .action-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f3f4f6;
+            color: #4B5563;
+        }
+        body.dark .action-btn-icon {
+            background: #334155;
+            color: #CBD5E1;
+        }
+        .action-btn-icon:hover {
+            background: #2B9348;
+            color: white;
+        }
+        
+        .mobile-menu-btn { display: none; }
+        @media (max-width: 1024px) { .mobile-menu-btn { display: flex; } }
+        
+        [dir="rtl"] .data-table th, [dir="rtl"] .data-table td { text-align: right; }
+        
+        /* Dark mode text fixes - NO BLACK TEXT ANYWHERE */
+        .dark .text-gray-900 { color: #F1F5F9 !important; }
+        .dark .text-gray-800 { color: #E2E8F0 !important; }
+        .dark .text-gray-700 { color: #CBD5E1 !important; }
+        .dark .text-gray-600 { color: #94A3B8 !important; }
+        .dark .text-gray-500 { color: #9CA3AF !important; }
+        .dark .text-gray-400 { color: #a1a1aa !important; }
+        .dark .text-primary { color: #4ADE80 !important; }
+        .dark .bg-gray-50 { background-color: #1E293B !important; }
+        .dark .bg-white { background-color: #0F172A !important; }
+        .dark .border-gray-200 { border-color: #334155 !important; }
+        
+        /* Quantity Adjuster */
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #4B5563;
+        }
+        body.dark .qty-btn {
+            background: #334155;
+            color: #94A3B8;
+        }
+        .qty-btn:hover {
+            background: #2B9348;
+            color: white;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            max-width: 500px;
+            width: 90%;
+            padding: 1.5rem;
+        }
+        .dark .modal-content {
+            background: #1E293B;
+        }
+        
+        /* Responsive Grid Fixes */
+        @media (max-width: 640px) {
+            .scrollable-content {
+                padding: 1rem;
+            }
+            .stat-card {
+                padding: 1rem;
+            }
+            .data-table th, .data-table td {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Chart Container Responsive */
+        canvas {
+            max-height: 200px;
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-seedling text-2xl text-primary"></i>
+                <span class="logo-text text-xl font-black bg-gradient-to-r from-primary to-green-400 bg-clip-text text-transparent font-orbitron">HydroFeed</span>
+                <span class="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full ml-2">Farmer</span>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Green Valley Dairy Farm</p>
+        </div>
+        
+        <nav class="py-4">
+            <div class="nav-item active" data-section="overview"><i class="fas fa-chart-pie"></i><span>Farm Overview</span></div>
+            <div class="nav-item" data-section="feedOrders"><i class="fas fa-truck"></i><span>Feed Deliveries</span></div>
+            <div class="nav-item" data-section="inventory"><i class="fas fa-boxes"></i><span>Tray Inventory</span></div>
+            <div class="nav-item" data-section="schedule"><i class="fas fa-calendar-alt"></i><span>Feeding Schedule</span></div>
+            <div class="nav-item" data-section="nutrition"><i class="fas fa-chart-line"></i><span>Nutritional Data</span></div>
+            <div class="nav-item" data-section="orders"><i class="fas fa-shopping-cart"></i><span>Adjust Orders</span></div>
+            <div class="nav-item" data-section="roi"><i class="fas fa-calculator"></i><span>ROI Calculator</span></div>
+        </nav>
+        
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-xs text-gray-500 dark:text-gray-400 text-center"><i class="fas fa-leaf"></i> Growing Better Together</div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Fixed Top Bar -->
+        <div class="top-bar-fixed px-4 sm:px-6 py-4">
+            <div class="flex justify-between items-center flex-wrap gap-3">
+                <div class="flex items-center gap-3">
+                    <button class="mobile-menu-btn action-btn-icon" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="pageTitle">Farm Overview</h1>
+                        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Welcome back, John! Your farm is thriving</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleTheme()" class="action-btn-icon" title="Theme"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                    <button onclick="toggleDirection()" class="action-btn-icon" title="RTL/LTR"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+                    <div class="profile-dropdown">
+                        <div class="action-btn-icon cursor-pointer"><i class="fas fa-user-circle text-xl"></i></div>
+                        <div class="profile-menu">
+                            <div class="profile-menu-item" onclick="showProfileModal()"><i class="fas fa-user"></i><span>My Profile</span></div>
+                            <div class="profile-menu-item" onclick="showNotificationModal()"><i class="fas fa-bell"></i><span>Notifications <span class="ml-2 bg-primary text-white text-xs px-1.5 rounded-full">2</span></span></div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                            <div class="profile-menu-item text-red-500 dark:text-red-400"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scrollable Content -->
+        <div class="scrollable-content">
+            <!-- Overview Section -->
+            <div id="overviewSection">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6">
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Active Trays</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">480</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-boxes text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-green-600 dark:text-green-400">85% utilization</div></div>
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Pending Deliveries</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">3</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-truck text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-orange-600 dark:text-orange-400">Next: Tomorrow</div></div>
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Livestock Fed</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">320</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-tractor text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-green-600 dark:text-green-400">+12 this month</div></div>
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Monthly Savings</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">$2,450</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-dollar-sign text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-green-600 dark:text-green-400">vs traditional feed</div></div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                    <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-3">Weekly Feed Consumption</h3><canvas id="consumptionChart" height="200"></canvas></div>
+                    <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-3">Tray Health Status</h3><canvas id="healthChart" height="200"></canvas></div>
+                </div>
+                
+                <div class="stat-card p-4 overflow-x-auto"><div class="flex justify-between items-center mb-4 flex-wrap gap-2"><h3 class="font-semibold text-gray-900 dark:text-white">Upcoming Feed Deliveries</h3><a href="#" class="text-primary text-sm hover:underline">View All</a></div>
+                <table class="data-table min-w-[500px]"><thead><tr><th>Delivery Date</th><th>Feed Type</th><th>Quantity</th><th>Status</th><th>Action</th></tr></thead><tbody>
+                    <tr><td>Mar 18, 2025</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">240 trays</td><td><span class="badge badge-warning">Scheduled</span></td><td><button class="text-primary text-sm">Track</button></td></tr>
+                    <tr><td>Mar 22, 2025</td><td class="text-gray-700 dark:text-gray-300">Wheat Grass</td><td class="text-gray-700 dark:text-gray-300">180 trays</td><td><span class="badge badge-info">Processing</span></td><td><button class="text-primary text-sm">Track</button></td></tr>
+                    <tr><td>Mar 25, 2025</td><td class="text-gray-700 dark:text-gray-300">Mixed Grain</td><td class="text-gray-700 dark:text-gray-300">320 trays</td><td><span class="badge badge-info">Confirmed</span></td><td><button class="text-primary text-sm">Track</button></td></tr>
+                </tbody></table></div>
+            </div>
+            
+            <!-- Feed Deliveries Section -->
+            <div id="feedOrdersSection" class="hidden"><div class="stat-card p-4 overflow-x-auto"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Recent Feed Deliveries</h3>
+            <table class="data-table min-w-[500px]"><thead><tr><th>Date</th><th>Feed Type</th><th>Trays</th><th>Status</th><th>Quality Score</th></tr></thead><tbody>
+                <tr><td>Mar 10, 2025</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">240</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">98%</td></tr>
+                <tr><td>Mar 3, 2025</td><td class="text-gray-700 dark:text-gray-300">Wheat Grass</td><td class="text-gray-700 dark:text-gray-300">180</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">96%</td></tr>
+                <tr><td>Feb 24, 2025</td><td class="text-gray-700 dark:text-gray-300">Mixed Grain</td><td class="text-gray-700 dark:text-gray-300">320</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">97%</td></tr>
+            </tbody></table></div></div>
+            
+            <!-- Tray Inventory Section -->
+            <div id="inventorySection" class="hidden"><div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
+                <div class="stat-card text-center"><i class="fas fa-layer-group text-3xl text-primary mb-2"></i><p class="text-2xl font-bold text-gray-900 dark:text-white">480</p><p class="text-sm text-gray-500 dark:text-gray-400">Total Trays</p></div>
+                <div class="stat-card text-center"><i class="fas fa-check-circle text-3xl text-green-500 mb-2"></i><p class="text-2xl font-bold text-gray-900 dark:text-white">408</p><p class="text-sm text-gray-500 dark:text-gray-400">In Use</p></div>
+                <div class="stat-card text-center"><i class="fas fa-box text-3xl text-yellow-500 mb-2"></i><p class="text-2xl font-bold text-gray-900 dark:text-white">72</p><p class="text-sm text-gray-500 dark:text-gray-400">Available</p></div>
+            </div>
+            <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Tray Cycle Status</h3>
+            <div class="space-y-3"><div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Germination (Day 1-2)</span><span class="text-gray-600 dark:text-gray-400">120 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-blue-500 h-2 rounded-full" style="width:25%"></div></div></div>
+            <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Growing (Day 3-5)</span><span class="text-gray-600 dark:text-gray-400">240 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-green-500 h-2 rounded-full" style="width:50%"></div></div></div>
+            <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Harvest Ready (Day 6-7)</span><span class="text-gray-600 dark:text-gray-400">48 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:10%"></div></div></div></div></div></div>
+            
+            <!-- Feeding Schedule Section -->
+            <div id="scheduleSection" class="hidden"><div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Today's Feeding Schedule</h3>
+            <div class="space-y-3"><div class="flex flex-wrap items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg gap-2"><div><i class="fas fa-clock text-primary mr-2"></i><span class="font-medium text-gray-700 dark:text-gray-300">06:00 AM</span></div><div class="text-gray-700 dark:text-gray-300">Dairy Herd (Morning Feed)</div><div><span class="badge badge-success">Completed</span></div></div>
+            <div class="flex flex-wrap items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg gap-2"><div><i class="fas fa-clock text-primary mr-2"></i><span class="font-medium text-gray-700 dark:text-gray-300">12:00 PM</span></div><div class="text-gray-700 dark:text-gray-300">Calves Supplement</div><div><span class="badge badge-warning">Upcoming</span></div></div>
+            <div class="flex flex-wrap items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg gap-2"><div><i class="fas fa-clock text-primary mr-2"></i><span class="font-medium text-gray-700 dark:text-gray-300">06:00 PM</span></div><div class="text-gray-700 dark:text-gray-300">Evening Feed</div><div><span class="badge badge-info">Scheduled</span></div></div></div></div></div>
+            
+            <!-- Nutritional Data Section -->
+            <div id="nutritionSection" class="hidden"><div class="grid lg:grid-cols-2 gap-6">
+                <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-3">Current Batch Nutrition</h3><canvas id="nutritionChart" height="200"></canvas></div>
+                <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Nutritional Breakdown</h3><div class="space-y-3"><div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Protein</span><span class="text-gray-600 dark:text-gray-400">18%</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:72%"></div></div></div>
+                <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Fiber</span><span class="text-gray-600 dark:text-gray-400">12%</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-blue-500 h-2 rounded-full" style="width:48%"></div></div></div>
+                <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Moisture</span><span class="text-gray-600 dark:text-gray-400">70%</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-yellow-500 h-2 rounded-full" style="width:85%"></div></div></div>
+                <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Digestibility</span><span class="text-gray-600 dark:text-gray-400">85%</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-green-500 h-2 rounded-full" style="width:85%"></div></div></div></div></div></div></div>
+            
+            <!-- Adjust Orders Section -->
+            <div id="ordersSection" class="hidden"><div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Adjust Recurring Feed Orders</h3>
+            <div class="space-y-4"><div class="flex flex-wrap items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg gap-3"><div><p class="font-medium text-gray-800 dark:text-gray-200">Barley Fodder</p><p class="text-sm text-gray-500">Next: Mar 18, 2025</p></div><div class="flex items-center gap-2"><button class="qty-btn" onclick="changeQty('barley', -10)"><i class="fas fa-minus"></i></button><span id="barleyQty" class="text-lg font-semibold text-gray-900 dark:text-white w-12 text-center">240</span><button class="qty-btn" onclick="changeQty('barley', 10)"><i class="fas fa-plus"></i></button><span class="text-sm text-gray-500 ml-1">trays</span></div></div>
+            <div class="flex flex-wrap items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg gap-3"><div><p class="font-medium text-gray-800 dark:text-gray-200">Wheat Grass</p><p class="text-sm text-gray-500">Next: Mar 22, 2025</p></div><div class="flex items-center gap-2"><button class="qty-btn" onclick="changeQty('wheat', -10)"><i class="fas fa-minus"></i></button><span id="wheatQty" class="text-lg font-semibold text-gray-900 dark:text-white w-12 text-center">180</span><button class="qty-btn" onclick="changeQty('wheat', 10)"><i class="fas fa-plus"></i></button><span class="text-sm text-gray-500 ml-1">trays</span></div></div>
+            <div class="flex flex-wrap items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg gap-3"><div><p class="font-medium text-gray-800 dark:text-gray-200">Mixed Grain</p><p class="text-sm text-gray-500">Next: Mar 25, 2025</p></div><div class="flex items-center gap-2"><button class="qty-btn" onclick="changeQty('mixed', -10)"><i class="fas fa-minus"></i></button><span id="mixedQty" class="text-lg font-semibold text-gray-900 dark:text-white w-12 text-center">320</span><button class="qty-btn" onclick="changeQty('mixed', 10)"><i class="fas fa-plus"></i></button><span class="text-sm text-gray-500 ml-1">trays</span></div></div>
+            <button class="w-full bg-primary text-white py-3 rounded-lg mt-4 hover:bg-secondary transition" onclick="saveOrderChanges()">Save Changes & Update Recurring Order</button></div></div></div>
+            
+            <!-- ROI Calculator Section -->
+            <div id="roiSection" class="hidden"><div class="stat-card p-6"><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Your Farm ROI Calculator</h3>
+            <div class="grid sm:grid-cols-2 gap-4"><div><label class="text-sm text-gray-600 dark:text-gray-400">Current Feed Cost ($/day)</label><input type="number" id="currentCost" value="2.5" class="w-full p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white mt-1"></div>
+            <div><label class="text-sm text-gray-600 dark:text-gray-400">HydroFeed Cost ($/day)</label><input type="number" id="hydroCost" value="1.2" class="w-full p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white mt-1"></div></div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 text-center"><div class="p-3 bg-primary/10 dark:bg-primary/20 rounded-xl"><p class="text-xs text-gray-500 dark:text-gray-400">Daily Savings</p><p class="text-xl font-bold text-primary" id="roiDaily">$416</p></div>
+            <div class="p-3 bg-primary/10 dark:bg-primary/20 rounded-xl"><p class="text-xs text-gray-500 dark:text-gray-400">Monthly Savings</p><p class="text-xl font-bold text-primary" id="roiMonthly">$12,480</p></div>
+            <div class="p-3 bg-primary/10 dark:bg-primary/20 rounded-xl"><p class="text-xs text-gray-500 dark:text-gray-400">Yearly Savings</p><p class="text-xl font-bold text-primary" id="roiYearly">$149,760</p></div>
+            <div class="p-3 bg-primary/10 dark:bg-primary/20 rounded-xl"><p class="text-xs text-gray-500 dark:text-gray-400">Water Saved/Year</p><p class="text-xl font-bold text-primary">1.2M gal</p></div></div>
+            <p class="text-xs text-center text-gray-500 dark:text-gray-400 mt-4"><i class="fas fa-calculator"></i> Based on 320 livestock</p></div></div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><div id="modalBody"></div><button class="mt-4 bg-primary text-white px-4 py-2 rounded-lg" onclick="closeModal()">Close</button></div></div>
+
+<script>
+    lucide.createIcons();
+    
+    let qtyValues = { barley: 240, wheat: 180, mixed: 320 };
+    let currentSection = 'overview';
+    
+    function changeQty(type, delta) {
+        let newVal = qtyValues[type] + delta;
+        if (newVal >= 50 && newVal <= 1000) {
+            qtyValues[type] = newVal;
+            document.getElementById(`${type}Qty`).innerText = newVal;
+        }
+    }
+    
+    function saveOrderChanges() {
+        alert('Order quantities updated! New recurring schedule saved.');
+    }
+    
+    function toggleTheme() {
+        document.documentElement.classList.toggle('dark');
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        setTimeout(() => {
+            lucide.createIcons();
+            // Stay on current section - reinitialize charts with new theme
+            refreshCharts();
+        }, 50);
+    }
+    
+    function refreshCharts() {
+        // Re-render charts to match theme
+        const isDark = document.documentElement.classList.contains('dark');
+        const textColor = isDark ? '#F1F5F9' : '#1F2937';
+        
+        if (window.consumptionChart) window.consumptionChart.destroy();
+        if (window.healthChart) window.healthChart.destroy();
+        if (window.nutritionChart) window.nutritionChart.destroy();
+        
+        initCharts();
+    }
+    
+    function toggleDirection() {
+        const currentDir = document.documentElement.dir;
+        document.documentElement.dir = currentDir === 'rtl' ? 'ltr' : 'rtl';
+    }
+    
+    function toggleMobileSidebar() {
+        document.getElementById('sidebar').classList.toggle('mobile-open');
+    }
+    
+    function switchToSection(section) {
+        currentSection = section;
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        document.querySelector(`.nav-item[data-section="${section}"]`).classList.add('active');
+        
+        document.getElementById('overviewSection').classList.add('hidden');
+        document.getElementById('feedOrdersSection').classList.add('hidden');
+        document.getElementById('inventorySection').classList.add('hidden');
+        document.getElementById('scheduleSection').classList.add('hidden');
+        document.getElementById('nutritionSection').classList.add('hidden');
+        document.getElementById('ordersSection').classList.add('hidden');
+        document.getElementById('roiSection').classList.add('hidden');
+        
+        if (section === 'overview') document.getElementById('overviewSection').classList.remove('hidden');
+        if (section === 'feedOrders') document.getElementById('feedOrdersSection').classList.remove('hidden');
+        if (section === 'inventory') document.getElementById('inventorySection').classList.remove('hidden');
+        if (section === 'schedule') document.getElementById('scheduleSection').classList.remove('hidden');
+        if (section === 'nutrition') document.getElementById('nutritionSection').classList.remove('hidden');
+        if (section === 'orders') document.getElementById('ordersSection').classList.remove('hidden');
+        if (section === 'roi') document.getElementById('roiSection').classList.remove('hidden');
+        
+        const titles = { overview: 'Farm Overview', feedOrders: 'Feed Deliveries', inventory: 'Tray Inventory', schedule: 'Feeding Schedule', nutrition: 'Nutritional Data', orders: 'Adjust Orders', roi: 'ROI Calculator' };
+        document.getElementById('pageTitle').innerText = titles[section] || 'Dashboard';
+        
+        if (window.innerWidth <= 1024) document.getElementById('sidebar').classList.remove('mobile-open');
+    }
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const section = this.dataset.section;
+            switchToSection(section);
+        });
+    });
+    
+    function showProfileModal() {
+        document.getElementById('modalBody').innerHTML = '<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Farmer Profile</h3><div class="space-y-3"><p class="text-gray-700 dark:text-gray-300"><strong>Name:</strong> John Anderson</p><p class="text-gray-700 dark:text-gray-300"><strong>Farm:</strong> Green Valley Dairy</p><p class="text-gray-700 dark:text-gray-300"><strong>Email:</strong> john@greenvalley.com</p><p class="text-gray-700 dark:text-gray-300"><strong>Member Since:</strong> January 2024</p></div>';
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    
+    function showNotificationModal() {
+        document.getElementById('modalBody').innerHTML = '<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Notifications</h3><div class="space-y-3"><div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"><p class="text-gray-700 dark:text-gray-300"><i class="fas fa-truck text-primary mr-2"></i> Your feed delivery is scheduled for tomorrow</p><span class="text-xs text-gray-500">2 hours ago</span></div><div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"><p class="text-gray-700 dark:text-gray-300"><i class="fas fa-chart-line text-primary mr-2"></i> New nutritional report available</p><span class="text-xs text-gray-500">Yesterday</span></div></div>';
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    
+    function closeModal(e) {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+    
+    function updateROI() {
+        let livestock = 320;
+        let current = parseFloat(document.getElementById('currentCost')?.value) || 0;
+        let hydro = parseFloat(document.getElementById('hydroCost')?.value) || 0;
+        let daily = livestock * (current - hydro);
+        if (document.getElementById('roiDaily')) document.getElementById('roiDaily').innerText = '$' + daily.toFixed(2);
+        if (document.getElementById('roiMonthly')) document.getElementById('roiMonthly').innerText = '$' + (daily * 30).toFixed(2);
+        if (document.getElementById('roiYearly')) document.getElementById('roiYearly').innerText = '$' + (daily * 365).toFixed(2);
+    }
+    
+    document.getElementById('currentCost')?.addEventListener('input', updateROI);
+    document.getElementById('hydroCost')?.addEventListener('input', updateROI);
+    updateROI();
+    
+    function initCharts() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const textColor = isDark ? '#F1F5F9' : '#1F2937';
+        
+        window.consumptionChart = new Chart(document.getElementById('consumptionChart'), {
+            type: 'line',
+            data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Feed (kg)', data: [320, 345, 310, 380, 400, 290, 350], borderColor: '#2B9348', backgroundColor: 'rgba(43,147,72,0.1)', fill: true, tension: 0.3 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: textColor } } } }
+        });
+        window.healthChart = new Chart(document.getElementById('healthChart'), {
+            type: 'doughnut',
+            data: { labels: ['Healthy', 'Growing', 'Harvest Ready'], datasets: [{ data: [200, 240, 40], backgroundColor: ['#2B9348', '#F59E0B', '#3B82F6'], borderWidth: 0 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { color: textColor } } } }
+        });
+        window.nutritionChart = new Chart(document.getElementById('nutritionChart'), {
+            type: 'bar',
+            data: { labels: ['Protein', 'Fiber', 'Moisture', 'Digestibility'], datasets: [{ label: 'Current Batch %', data: [18, 12, 70, 85], backgroundColor: '#2B9348', borderRadius: 8 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: textColor } } } }
+        });
+    }
+    
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('dark');
+    }
+    
+    initCharts();
+    
+    document.addEventListener('click', function(e) {
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = e.target.closest('.mobile-menu-btn');
+        if (window.innerWidth <= 1024 && sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuBtn) {
+            sidebar.classList.remove('mobile-open');
+        }
+    });
+</script>
+</body>
+</html>

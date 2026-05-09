@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>HydroFeed | Hydroponic Fodder - Modern Farming Solutions</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232B9348'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13L16,10L11,7Z'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#2B9348',
+                        secondary: '#1E7E34',
+                        darkBg: '#0F172A'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'monospace']
+                    }
+                } 
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+        
+        body.light {
+            background: #F9FAFB;
+        }
+        
+        body.dark {
+            background: #0F172A;
+        }
+        
+        body.menu-open {
+            overflow: hidden;
+        }
+        
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(43, 147, 72, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .dark .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .nav-3-part {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .nav-part-left {
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 6px 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+            color: #2B9348;
+        }
+        
+        .logo-text {
+            font-weight: 900;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #2B9348, #4ADE80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .nav-part-center {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+        
+        .nav-link {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 40px;
+            color: #1F2937;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .dark .nav-link {
+            color: #E5E7EB;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(43, 147, 72, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            margin-top: 12px;
+            min-width: 220px;
+            background: white;
+            border-radius: 24px;
+            padding: 10px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+        }
+        
+        .dark .dropdown-menu {
+            background: #1E293B;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 16px;
+            color: #1F2937;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .dark .dropdown-item {
+            color: #E5E7EB;
+        }
+        
+        .dropdown-item i {
+            width: 18px;
+            color: #2B9348;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .profile-dropdown {
+            position: relative;
+        }
+        
+        .profile-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            margin-top: 12px;
+            min-width: 220px;
+            background: white;
+            border-radius: 24px;
+            padding: 10px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+        }
+        
+        [dir="ltr"] .profile-dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+        
+        [dir="rtl"] .profile-dropdown-menu {
+            left: 0;
+            right: auto;
+        }
+        
+        .dark .profile-dropdown-menu {
+            background: #1E293B;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .profile-dropdown:hover .profile-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .nav-part-right {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+            flex-shrink: 0;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        .hamburger {
+            display: none;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .hamburger:hover {
+            transform: scale(1.05);
+        }
+        
+        .desktop-auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .nav-link { padding: 8px 10px; font-size: 13px; }
+        }
+        
+        @media (max-width: 1100px) {
+            .nav-link { padding: 8px 8px; font-size: 12px; }
+            .nav-part-center { gap: 0.1rem; }
+        }
+        
+        @media (max-width: 1000px) {
+            .nav-part-center { display: none !important; }
+            .desktop-auth-buttons { display: none !important; }
+            .hamburger { display: flex !important; }
+            .profile-dropdown { display: none !important; }
+        }
+        
+        @media (min-width: 1001px) {
+            .hamburger { display: none !important; }
+            .nav-part-center { display: flex !important; }
+            .desktop-auth-buttons { display: flex !important; }
+            .profile-dropdown { display: block !important; }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container { padding: 0.5rem 1rem; }
+            .logo { padding: 4px 6px; }
+            .logo-text { font-size: 1.2rem; }
+            .logo i { font-size: 1.5rem; }
+            .action-btn, .hamburger { width: 36px; height: 36px; }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.5rem 0.75rem; }
+            .logo-text { font-size: 1rem; }
+            .logo i { font-size: 1.3rem; }
+            .action-btn, .hamburger { width: 34px; height: 34px; }
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 85%;
+            max-width: 380px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .mobile-menu {
+            background: rgba(15, 23, 42, 0.98);
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(43, 147, 72, 0.1), rgba(30, 126, 52, 0.1));
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        
+        .mobile-close {
+            width: 48px;
+            height: 48px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            border: none;
+        }
+        
+        .mobile-nav-items {
+            padding: 0 20px 20px 20px;
+        }
+        
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            margin: 6px 0;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1F2937;
+            background: white;
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+        
+        .dark .mobile-nav-link {
+            color: #E5E7EB;
+            background: rgba(43, 147, 72, 0.1);
+            border-color: rgba(74, 222, 128, 0.25);
+        }
+        
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white !important;
+            transform: translateX(5px);
+        }
+        
+        .mobile-submenu-items {
+            margin-left: 20px;
+            padding-left: 18px;
+            border-left: 2px solid #2B9348;
+            display: none;
+            animation: slideDown 0.25s ease;
+        }
+        
+        .mobile-submenu-items.open {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .mobile-submenu-items a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            margin: 8px 0;
+            border-radius: 16px;
+            color: #1F2937;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            background: white;
+            border: 1px solid rgba(43, 147, 72, 0.15);
+        }
+        
+        .dark .mobile-submenu-items a {
+            color: #E5E7EB;
+            background: rgba(43, 147, 72, 0.08);
+        }
+        
+        .mobile-submenu-items a:hover {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+        }
+        
+        .mobile-settings {
+            background: linear-gradient(135deg, rgba(43, 147, 72, 0.1), rgba(30, 126, 52, 0.1));
+            border: 1px solid rgba(43, 147, 72, 0.3);
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        
+        .mobile-setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        
+        .mobile-setting-label {
+            font-weight: 600;
+            color: #1F2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .dark .mobile-setting-label {
+            color: #E5E7EB;
+        }
+        
+        /* ===== RUNNING TICKER (Between Navbar and Hero) ===== */
+        .ticker-section {
+            position: relative;
+            top: 73px;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 8px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 998;
+        }
+        
+        .dark .ticker-section {
+            background: linear-gradient(135deg, #1E7E34, #166534);
+        }
+        
+        .ticker-track {
+            display: inline-block;
+            white-space: nowrap;
+            will-change: transform;
+        }
+        
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 50px;
+            color: white;
+            font-weight: 500;
+            font-size: 13px;
+            padding: 2px 0;
+        }
+        
+        .ticker-item i {
+            font-size: 12px;
+        }
+        
+        .ticker-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        
+        /* Adjust main content */
+        .main-content {
+            padding-top: 75px;
+        }
+        
+        @media (max-width: 1000px) {
+            .ticker-section {
+                top: 65px;
+            }
+            .main-content {
+                padding-top: 100px;
+            }
+        }
+        
+        /* Hero section - with background image */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.6)), url('https://images.pexels.com/photos/8092672/pexels-photo-8092672.jpeg?w=1600&h=800&fit=crop');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            padding: 1rem 0 5rem 0;
+        }
+        
+        .dark .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.75)), url('https://images.pexels.com/photos/8092672/pexels-photo-8092672.jpeg?w=1600&h=800&fit=crop');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+        
+        /* Hover card effects */
+        .hover-card {
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .hover-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 40px -12px rgba(43, 147, 72, 0.25);
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* CTA Section */
+        .cta-enhanced {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 40px;
+        }
+        
+        .cta-enhanced::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(43,147,72,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseSlow 6s ease-in-out infinite;
+        }
+        
+        .cta-enhanced::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(43,147,72,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseSlow 8s ease-in-out infinite reverse;
+        }
+        
+        @keyframes pulseSlow {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.6; }
+        }
+        
+        .cta-card {
+            transition: all 0.3s ease;
+        }
+        .cta-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -12px rgba(43, 147, 72, 0.3);
+        }
+        
+        /* Footer - White background in light mode */
+        footer {
+            background: #FFFFFF;
+            border-top: none;
+        }
+        
+        .dark footer {
+            background: #0F172A;
+        }
+        
+        .green-line {
+            height: 4px;
+            background: linear-gradient(90deg, #2B9348, #4ADE80, #2B9348);
+            width: 100%;
+        }
+        
+        /* Partner Logo Styles - Green and Larger */
+        .partner-logo {
+            font-size: 3rem;
+            color: #2B9348;
+            transition: all 0.3s ease;
+        }
+        
+        .dark .partner-logo {
+            color: #4ADE80;
+        }
+        
+        .partner-logo:hover {
+            transform: scale(1.1);
+            color: #1E7E34;
+        }
+        
+        /* Footer Social Icons - Fixed for dark mode */
+        .social-icon {
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            background: #f3f4f6;
+            color: #4B5563;
+        }
+        
+        .dark .social-icon {
+            background: #1E293B;
+            color: #94A3B8;
+        }
+        
+        .social-icon:hover {
+            background: #2B9348 !important;
+            color: white !important;
+        }
+        
+        /* Dark theme text fixes - no black text */
+        .dark .text-gray-900 {
+            color: #F1F5F9 !important;
+        }
+        .dark .text-gray-800 {
+            color: #E2E8F0 !important;
+        }
+        .dark .text-gray-700 {
+            color: #CBD5E1 !important;
+        }
+        .dark .text-gray-600 {
+            color: #94A3B8 !important;
+        }
+        .dark .text-gray-500 {
+            color: #94A3B8 !important;
+        }
+        .dark .bg-gray-50 {
+            background-color: #1E293B !important;
+        }
+        .dark .bg-white {
+            background-color: #0F172A !important;
+        }
+        .dark .border-gray-200 {
+            border-color: #334155 !important;
+        }
+        .dark .text-gray-400 {
+            color: #94A3B8 !important;
+        }
+        .dark .testimonial-card p {
+            color: #CBD5E1 !important;
+        }
+        .dark .blog-card p {
+            color: #94A3B8 !important;
+        }
+    </style>
+</head>
+<body class="light font-inter">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-3-part">
+                <div class="nav-part-left">
+                    <a href="#" class="logo">
+                        <i class="fas fa-seedling"></i>
+                        <span class="logo-text">HydroFeed</span>
+                    </a>
+                </div>
+                <div class="nav-part-center">
+                    <div class="dropdown">
+                        <button class="nav-link">Home <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="index.html" class="dropdown-item">Home 1 - Farming Focus</a>
+                            <a href="home2.html" class="dropdown-item active">Home 2 - Modern Solutions</a>
+                        </div>
+                    </div>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="rio.html" class="nav-link">RIO</a>
+                    <a href="plans.html" class="nav-link">Plans</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                    <div class="dropdown">
+                        <button class="nav-link active">Dashboard <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="admin.html" class="dropdown-item">Admin Dashboard</a>
+                            <a href="farmer.html" class="dropdown-item active">Farmer Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-part-right">
+                    <div class="desktop-auth-buttons">
+                        <button onclick="toggleDirection()" class="action-btn"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+                        <button onclick="toggleTheme()" class="action-btn"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                    </div>
+                    <div class="profile-dropdown">
+                        <button class="action-btn"><i data-lucide="user" class="w-4 h-4"></i></button>
+                        <div class="profile-dropdown-menu">
+                            <a href="login.html" class="dropdown-item"><i data-lucide="log-in"></i>Login</a>
+                            <a href="signup.html" class="dropdown-item"><i data-lucide="user-plus"></i>Signup</a>
+                        </div>
+                    </div>
+                    <button class="hamburger" onclick="openMobileMenu()"><i data-lucide="menu" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenuPanel">
+        <div class="mobile-header">
+            <a href="index.html" class="logo" onclick="closeMobileMenu()"><i class="fas fa-seedling"></i><span class="logo-text">HydroFeed</span></a>
+            <button onclick="closeMobileMenu()" class="mobile-close"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        <div class="mobile-nav-items">
+            <button onclick="toggleMobileSubmenu('mobileHomeSubmenu')" class="mobile-nav-link active">
+                <span><i class="fas fa-home mr-3"></i>HOME</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileHomeSubmenu" class="mobile-submenu-items open">
+                <a href="index.html" onclick="closeMobileMenu()">Home 1</a>
+                <a href="home2.html" class="active" onclick="closeMobileMenu()">Home 2</a>
+            </div>
+            <a href="about.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-info-circle mr-3"></i>ABOUT</span></a>
+            <a href="products.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-box mr-3"></i>PRODUCTS</span></a>
+            <a href="plans.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-tag mr-3"></i>PLANS</span></a>
+            <a href="contact.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-envelope mr-3"></i>CONTACT</span></a>
+            <button onclick="toggleMobileSubmenu('mobileDashSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-chalkboard-user mr-3"></i>DASHBOARD</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileDashSubmenu" class="mobile-submenu-items">
+                <a href="admin.html">Admin Dashboard</a>
+                <a href="farmer.html">Farmer Dashboard</a>
+            </div>
+            <button onclick="toggleMobileSubmenu('mobileAuthSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-user-circle mr-3"></i>ACCOUNT</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileAuthSubmenu" class="mobile-submenu-items">
+                <a href="login.html">Login</a>
+                <a href="signup.html">Signup</a>
+            </div>
+            <div class="mobile-settings">
+                <div class="mobile-setting-item">
+                    <span class="mobile-setting-label"><i class="fa-solid fa-arrow-right-arrow-left"></i> DIRECTION</span>
+                    <button onclick="toggleDirectionMobile()" class="action-btn"><i class="fa-solid fa-left-right"></i></button>
+                </div>
+                <div class="mobile-setting-item">
+                    <span class="mobile-setting-label"><i data-lucide="moon"></i> THEME</span>
+                    <button onclick="toggleThemeMobile()" class="action-btn"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RUNNING TICKER (Between Navbar and Hero Section) -->
+    <div class="ticker-section">
+        <div class="ticker-track" id="tickerTrack">
+            <span class="ticker-item"><i class="fas fa-leaf"></i> <strong>🌱 Special Offer:</strong> Get 20% off on your first month - Use code HYDRO20 <span class="ticker-badge">Limited Time</span></span>
+            <span class="ticker-item"><i class="fas fa-tint"></i> <strong>💧 Save 70% Water</strong> compared to traditional farming <span class="ticker-badge">Eco-Friendly</span></span>
+            <span class="ticker-item"><i class="fas fa-chart-line"></i> <strong>📈 Farmers Report 40% Higher Yield</strong> within 3 months <span class="ticker-badge">Proven Results</span></span>
+            <span class="ticker-item"><i class="fas fa-truck"></i> <strong>🚚 Free Delivery</strong> on orders over 200 trays <span class="ticker-badge">Limited</span></span>
+            <span class="ticker-item"><i class="fas fa-calendar"></i> <strong>📅 New Dashboard Features</strong> Live inventory tracking now available <span class="ticker-badge">New</span></span>
+            <span class="ticker-item"><i class="fas fa-award"></i> <strong>🏆 Award-Winning System</strong> Best AgTech Innovation 2025 <span class="ticker-badge">Awarded</span></span>
+            <span class="ticker-item"><i class="fas fa-chart-simple"></i> <strong>💰 Average ROI:</strong> 3-6 months payback period <span class="ticker-badge">Calculate Yours</span></span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content ">
+        <!-- Hero Section - Centered, with background image -->
+        <section class="hero-section" style="padding: 1rem 0 5rem 0;">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                    <i class="fas fa-seedling"></i>
+                    <span>Sustainable Agriculture 2.0</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
+                    Grow More With <span class="text-primary">Less Resources</span>
+                </h1>
+                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+                    Hydroponic fodder systems that reduce water usage by 70% while increasing livestock productivity. Join the future of farming today.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <button class="bg-primary text-white px-8 py-4 rounded-xl font-semibold hover:bg-secondary transition shadow-lg flex items-center gap-2">
+                        <i class="fas fa-play"></i> Watch Demo
+                    </button>
+                    <button class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white px-8 py-4 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center gap-2">
+                        <i class="fas fa-chart-line"></i> Calculate Savings
+                    </button>
+                </div>
+                <div class="flex flex-wrap gap-8 justify-center mt-12">
+                    <div><span class="text-3xl font-black text-primary">70%</span><p class="text-sm text-gray-200">Less Water</p></div>
+                    <div><span class="text-3xl font-black text-primary">5-7</span><p class="text-sm text-gray-200">Days Growth</p></div>
+                    <div><span class="text-3xl font-black text-primary">40%</span><p class="text-sm text-gray-200">Higher Yield</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid with Images -->
+        <section class="py-20 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Our System</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">How Hydroponic Fodder Works</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">From seed to harvest in just 7 days</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover-card">
+                        <img src="https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg?w=400&h=250&fit=crop" alt="Seeds" class="w-full h-48 object-cover">
+                        <div class="p-6 text-center">
+                            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl font-bold text-primary">1</span></div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Seed Selection</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Premium barley and wheatgrass seeds optimized for hydroponic growth.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover-card">
+                        <img src="https://images.unsplash.com/photo-1535463731090-e34f4b5098c5?w=400&h=250&fit=crop" alt="Growing" class="w-full h-48 object-cover">
+                        <div class="p-6 text-center">
+                            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl font-bold text-primary">2</span></div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Automated Growing</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Climate-controlled environment with automated watering and lighting.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg hover-card">
+                        <img src="https://images.pexels.com/photos/1171684/pexels-photo-1171684.jpeg?w=400&h=250&fit=crop" alt="Harvest" class="w-full h-48 object-cover">
+                        <div class="p-6 text-center">
+                            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl font-bold text-primary">3</span></div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Fresh Harvest</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Nutrient-rich fodder ready for your livestock in just 7 days.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Counter Section -->
+        <section class="py-20 bg-gradient-to-r from-primary to-secondary">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div><div class="text-4xl md:text-5xl font-black text-white">500+</div><p class="text-white/80 mt-2">Active Farms</p></div>
+                    <div><div class="text-4xl md:text-5xl font-black text-white">50K+</div><p class="text-white/80 mt-2">Trays Delivered</p></div>
+                    <div><div class="text-4xl md:text-5xl font-black text-white">98%</div><p class="text-white/80 mt-2">Satisfaction</p></div>
+                    <div><div class="text-4xl md:text-5xl font-black text-white">35%</div><p class="text-white/80 mt-2">Avg Savings</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery / Showcase Grid -->
+        <section class="py-20 bg-white dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Gallery</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">See HydroFeed in Action</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">Real farms, real results</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="rounded-2xl overflow-hidden shadow-lg hover-card bg-white dark:bg-gray-800"><img src="https://images.pexels.com/photos/8092672/pexels-photo-8092672.jpeg?w=500&h=350&fit=crop" alt="Fodder Trays" class="w-full h-64 object-cover"><div class="p-4"><p class="font-semibold text-gray-900 dark:text-white">Fresh Barley Fodder</p><p class="text-sm text-gray-500 dark:text-gray-400">Day 7 harvest ready for livestock</p></div></div>
+                    <div class="rounded-2xl overflow-hidden shadow-lg hover-card bg-white dark:bg-gray-800"><img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?w=500&h=350&fit=crop" alt="Happy Cows" class="w-full h-64 object-cover"><div class="p-4"><p class="font-semibold text-gray-900 dark:text-white">Happy Livestock</p><p class="text-sm text-gray-500 dark:text-gray-400">Increased milk production by 32%</p></div></div>
+                    <div class="rounded-2xl overflow-hidden shadow-lg hover-card bg-white dark:bg-gray-800"><img src="https://images.unsplash.com/photo-1592417817098-8fd3f4d2f2a8?w=500&h=350&fit=crop" alt="Growing System" class="w-full h-64 object-cover"><div class="p-4"><p class="font-semibold text-gray-900 dark:text-white">Automated System</p><p class="text-sm text-gray-500 dark:text-gray-400">Smart irrigation with IoT sensors</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partners Section - Larger Green Logos -->
+        <section class="py-16 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <p class="text-gray-500 dark:text-gray-400 text-sm uppercase tracking-wider mb-8">Trusted By Leading Agricultural Brands</p>
+                <div class="flex flex-wrap justify-center items-center gap-12">
+                    <i class="fab fa-envira partner-logo"></i>
+                    <i class="fas fa-tractor partner-logo"></i>
+                    <i class="fas fa-leaf partner-logo"></i>
+                    <i class="fas fa-chart-line partner-logo"></i>
+                    <i class="fas fa-seedling partner-logo"></i>
+                    <i class="fas fa-cow partner-logo"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog/Insights Section -->
+        <section class="py-20 bg-white dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Insights</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Latest from HydroFeed</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">Tips, guides, and success stories from our farming community</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="rounded-2xl overflow-hidden shadow-lg hover-card bg-gray-50 dark:bg-gray-800">
+                        <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=200&fit=crop" alt="Blog" class="w-full h-48 object-cover">
+                        <div class="p-6"><span class="text-primary text-sm font-semibold">Guide</span><h3 class="text-xl font-bold text-gray-900 dark:text-white mt-2 mb-2">10 Benefits of Hydroponic Fodder</h3><p class="text-gray-500 dark:text-gray-400">Discover why farmers are switching to hydroponic systems.</p><a href="#" class="inline-flex items-center gap-1 text-primary mt-3 font-semibold">Read More →</a></div>
+                    </div>
+                    <div class="rounded-2xl overflow-hidden shadow-lg hover-card bg-gray-50 dark:bg-gray-800">
+                        <img src="https://images.pexels.com/photos/6353450/pexels-photo-6353450.jpeg?w=400&h=200&fit=crop" alt="Success Story" class="w-full h-48 object-cover">
+                        <div class="p-6"><span class="text-primary text-sm font-semibold">Success Story</span><h3 class="text-xl font-bold text-gray-900 dark:text-white mt-2 mb-2">How One Farm Saved $50K Yearly</h3><p class="text-gray-500 dark:text-gray-400">Real results from a family-owned dairy farm.</p><a href="#" class="inline-flex items-center gap-1 text-primary mt-3 font-semibold">Read More →</a></div>
+                    </div>
+                    <div class="rounded-2xl overflow-hidden shadow-lg hover-card bg-gray-50 dark:bg-gray-800">
+                        <img src="https://images.unsplash.com/photo-1535463731090-e34f4b5098c5?w=400&h=200&fit=crop" alt="Tips" class="w-full h-48 object-cover">
+                        <div class="p-6"><span class="text-primary text-sm font-semibold">Tips</span><h3 class="text-xl font-bold text-gray-900 dark:text-white mt-2 mb-2">Optimizing Your Feed Schedule</h3><p class="text-gray-500 dark:text-gray-400">Maximize nutrition with smart feeding strategies.</p><a href="#" class="inline-flex items-center gap-1 text-primary mt-3 font-semibold">Read More →</a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Grid -->
+        <section class="py-20 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Testimonials</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">What Farmers Say</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">Trusted by farmers worldwide</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="testimonial-card bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg">
+                        <div class="flex text-primary mb-3"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">"HydroFeed transformed our dairy farm. Milk production increased by 32% in just 3 months!"</p>
+                        <div class="flex items-center gap-3"><div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center"><i class="fas fa-user text-primary"></i></div><div><p class="font-bold text-gray-900 dark:text-white">Sarah Johnson</p><p class="text-sm text-gray-500 dark:text-gray-400">Dairy Farmer</p></div></div>
+                    </div>
+                    <div class="testimonial-card bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg">
+                        <div class="flex text-primary mb-3"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">"The dashboard makes managing feed deliveries so easy. Highly recommend to any farmer."</p>
+                        <div class="flex items-center gap-3"><div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center"><i class="fas fa-user text-primary"></i></div><div><p class="font-bold text-gray-900 dark:text-white">Mike Thompson</p><p class="text-sm text-gray-500 dark:text-gray-400">Ranch Owner</p></div></div>
+                    </div>
+                    <div class="testimonial-card bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg">
+                        <div class="flex text-primary mb-3"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">"70% less water usage and healthier livestock. This is the future of sustainable farming."</p>
+                        <div class="flex items-center gap-3"><div class="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center"><i class="fas fa-user text-primary"></i></div><div><p class="font-bold text-gray-900 dark:text-white">Green Pastures Co.</p><p class="text-sm text-gray-500 dark:text-gray-400">Organic Farm</p></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENHANCED CTA SECTION -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="cta-enhanced relative z-10">
+                <div class="relative z-20 px-6 md:px-12 py-12 md:py-16">
+                    <div class="grid lg:grid-cols-2 gap-12 items-center">
+                        <div class="text-center lg:text-left">
+                            <div class="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 border border-primary/30">
+                                <i class="fas fa-rocket"></i>
+                                <span>Limited Time Offer</span>
+                            </div>
+                            <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
+                                Ready to Transform <br><span class="text-primary">Your Farm?</span>
+                            </h2>
+                            <p class="text-lg text-gray-300 mb-6 max-w-lg mx-auto lg:mx-0">
+                                Join 500+ farmers already saving money with HydroFeed. Get started today and see the difference.
+                            </p>
+                            <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                                <a href="#" class="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-secondary transition shadow-lg hover:shadow-xl inline-flex items-center gap-2 group">
+                                    <i class="fas fa-seedling"></i> Start Your Farm 
+                                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                                </a>
+                                <a href="#" class="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition inline-flex items-center gap-2">
+                                    <i class="fas fa-calendar-alt"></i> Schedule Demo
+                                </a>
+                            </div>
+                            <div class="flex flex-wrap gap-6 mt-8 justify-center lg:justify-start">
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-300">Free Consultation</span></div>
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-300">Dashboard Access</span></div>
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-300">Nutritional Support</span></div>
+                                <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-300">Unlimited Revisions</span></div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="cta-card bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center"><i class="fas fa-chart-line text-primary text-xl"></i></div>
+                                    <div><p class="text-white text-sm">Average Project Completion</p><p class="text-2xl font-bold text-white">3-5 <span class="text-sm">Days</span></p></div>
+                                </div>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center"><i class="fas fa-tractor text-primary text-xl"></i></div>
+                                    <div><p class="text-white text-sm">Happy Farmers</p><p class="text-2xl font-bold text-white">500+</p></div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center"><i class="fas fa-leaf text-primary text-xl"></i></div>
+                                    <div><p class="text-white text-sm">Trays Delivered</p><p class="text-2xl font-bold text-white">50K+</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Green Line Before Footer -->
+    <div class="green-line"></div>
+
+    <!-- Footer - With Fixed Social Icons for Dark Mode -->
+    <footer class="bg-white dark:bg-gray-900 pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:grid md:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <a href="#" class="logo flex items-center gap-2 mb-4 group">
+                        <i class="fas fa-seedling text-2xl text-primary"></i>
+                        <span class="logo-text">HydroFeed</span>
+                    </a>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter text-xs"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram text-xs"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in text-xs"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-primary transition">Home</a></li>
+                        <li><a href="#" class="hover:text-primary transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Products</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Plans</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Resources</h4>
+                    <ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-primary transition">ROI Calculator</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Feeding Guides</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Farmer Dashboard</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Support Center</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-gray-900 dark:text-white">Contact Info</h4>
+                    <div class="space-y-3 text-gray-500 dark:text-gray-400 text-sm">
+                        <p><i class="fas fa-map-marker-alt text-primary mr-2"></i> San Francisco, CA</p>
+                        <p><i class="fas fa-envelope text-primary mr-2"></i> <a href="mailto:hello@hydrofeed.com" class="hover:text-primary">hello@hydrofeed.com</a></p>
+                        <p><i class="fas fa-phone text-primary mr-2"></i> <a href="tel:+18005554321" class="hover:text-primary">+1 (800) 555-4321</a></p>
+                        <p><i class="fas fa-clock text-primary mr-2"></i> Mon-Fri: 9AM - 6PM EST</p>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 text-xs">
+                <p>© 2025 HydroFeed — Sustainable Hydroponic Fodder & Livestock Feed Supply. All rights reserved.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-primary transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-primary transition">Terms of Service</a>
+                    <a href="#" class="hover:text-primary transition">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        
+        // Scrollable Ticker Animation
+        const tickerTrack = document.getElementById('tickerTrack');
+        let animationId = null;
+        let position = 0;
+        let speed = 1.5;
+        
+        function startTicker() {
+            if (!tickerTrack) return;
+            const trackWidth = tickerTrack.scrollWidth;
+            
+            function animate() {
+                position -= speed;
+                if (Math.abs(position) >= trackWidth / 2) {
+                    position = 0;
+                }
+                tickerTrack.style.transform = `translateX(${position}px)`;
+                animationId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        
+        startTicker();
+        
+        function openMobileMenu() {
+            document.getElementById('mobileMenuPanel').classList.add('open');
+            document.getElementById('mobileOverlay').classList.add('active');
+            document.body.classList.add('menu-open');
+        }
+        
+        function closeMobileMenu() {
+            document.getElementById('mobileMenuPanel').classList.remove('open');
+            document.getElementById('mobileOverlay').classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+        
+        function toggleMobileSubmenu(id) {
+            const submenu = document.getElementById(id);
+            if (submenu) submenu.classList.toggle('open');
+        }
+        
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            setTimeout(() => lucide.createIcons(), 10);
+        }
+        
+        function toggleThemeMobile() { toggleTheme(); }
+        function toggleDirection() { document.documentElement.dir = document.documentElement.dir === 'rtl' ? 'ltr' : 'rtl'; }
+        function toggleDirectionMobile() { toggleDirection(); }
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark');
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

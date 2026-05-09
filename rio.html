@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>HydroFeed | RIO - Return on Investment & Farm Savings Calculator</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232B9348'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13L16,10L11,7Z'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#2B9348',
+                        secondary: '#1E7E34',
+                        darkBg: '#0F172A'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'monospace']
+                    }
+                } 
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+        
+        body.light {
+            background: #F9FAFB;
+        }
+        
+        body.dark {
+            background: #0F172A;
+        }
+        
+        body.menu-open {
+            overflow: hidden;
+        }
+        
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(43, 147, 72, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .dark .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .nav-3-part {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .nav-part-left {
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 6px 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+            color: #2B9348;
+        }
+        
+        .logo-text {
+            font-weight: 900;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #2B9348, #4ADE80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .nav-part-center {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+        
+        .nav-link {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 40px;
+            color: #1F2937;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .dark .nav-link {
+            color: #E5E7EB;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(43, 147, 72, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            margin-top: 12px;
+            min-width: 220px;
+            background: white;
+            border-radius: 24px;
+            padding: 10px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+        }
+        
+        .dark .dropdown-menu {
+            background: #1E293B;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 16px;
+            color: #1F2937;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .dark .dropdown-item {
+            color: #E5E7EB;
+        }
+        
+        .dropdown-item i {
+            width: 18px;
+            color: #2B9348;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .profile-dropdown {
+            position: relative;
+        }
+        
+        .profile-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            margin-top: 12px;
+            min-width: 220px;
+            background: white;
+            border-radius: 24px;
+            padding: 10px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+        }
+        
+        [dir="ltr"] .profile-dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+        
+        [dir="rtl"] .profile-dropdown-menu {
+            left: 0;
+            right: auto;
+        }
+        
+        .dark .profile-dropdown-menu {
+            background: #1E293B;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .profile-dropdown:hover .profile-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .nav-part-right {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+            flex-shrink: 0;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        .hamburger {
+            display: none;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .hamburger:hover {
+            transform: scale(1.05);
+        }
+        
+        .desktop-auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .nav-link { padding: 8px 10px; font-size: 13px; }
+        }
+        
+        @media (max-width: 1100px) {
+            .nav-link { padding: 8px 8px; font-size: 12px; }
+            .nav-part-center { gap: 0.1rem; }
+        }
+        
+        @media (max-width: 1000px) {
+            .nav-part-center { display: none !important; }
+            .desktop-auth-buttons { display: none !important; }
+            .hamburger { display: flex !important; }
+            .profile-dropdown { display: none !important; }
+        }
+        
+        @media (min-width: 1001px) {
+            .hamburger { display: none !important; }
+            .nav-part-center { display: flex !important; }
+            .desktop-auth-buttons { display: flex !important; }
+            .profile-dropdown { display: block !important; }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container { padding: 0.5rem 1rem; }
+            .logo { padding: 4px 6px; }
+            .logo-text { font-size: 1.2rem; }
+            .logo i { font-size: 1.5rem; }
+            .action-btn, .hamburger { width: 36px; height: 36px; }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.5rem 0.75rem; }
+            .logo-text { font-size: 1rem; }
+            .logo i { font-size: 1.3rem; }
+            .action-btn, .hamburger { width: 34px; height: 34px; }
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 85%;
+            max-width: 380px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .mobile-menu {
+            background: rgba(15, 23, 42, 0.98);
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(43, 147, 72, 0.1), rgba(30, 126, 52, 0.1));
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        
+        .mobile-close {
+            width: 48px;
+            height: 48px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            border: none;
+        }
+        
+        .mobile-nav-items {
+            padding: 0 20px 20px 20px;
+        }
+        
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            margin: 6px 0;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1F2937;
+            background: white;
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+        
+        .dark .mobile-nav-link {
+            color: #E5E7EB;
+            background: rgba(43, 147, 72, 0.1);
+            border-color: rgba(74, 222, 128, 0.25);
+        }
+        
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white !important;
+            transform: translateX(5px);
+        }
+        
+        .mobile-submenu-items {
+            margin-left: 20px;
+            padding-left: 18px;
+            border-left: 2px solid #2B9348;
+            display: none;
+            animation: slideDown 0.25s ease;
+        }
+        
+        .mobile-submenu-items.open {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .mobile-submenu-items a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            margin: 8px 0;
+            border-radius: 16px;
+            color: #1F2937;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            background: white;
+            border: 1px solid rgba(43, 147, 72, 0.15);
+        }
+        
+        .dark .mobile-submenu-items a {
+            color: #E5E7EB;
+            background: rgba(43, 147, 72, 0.08);
+        }
+        
+        .mobile-submenu-items a:hover {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+        }
+        
+        .mobile-settings {
+            background: linear-gradient(135deg, rgba(43, 147, 72, 0.1), rgba(30, 126, 52, 0.1));
+            border: 1px solid rgba(43, 147, 72, 0.3);
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        
+        .mobile-setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        
+        .mobile-setting-label {
+            font-weight: 600;
+            color: #1F2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .dark .mobile-setting-label {
+            color: #E5E7EB;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 85px;
+        }
+        
+        @media (max-width: 1000px) {
+            .main-content {
+                padding-top: 75px;
+            }
+        }
+        
+        /* RIO Page Specific Styles - Full height containers */
+        .about-hero {
+            background: linear-gradient(135deg, #0a2e1a 0%, #1a4a2a 50%, #2d6a3a 100%);
+        }
+        
+        .rio-card {
+            transition: all 0.4s ease;
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dark .rio-card {
+            background: #1E293B;
+        }
+        
+        .rio-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        /* Border effect for calculator containers */
+        .calculator-border-effect {
+            position: relative;
+            background: linear-gradient(135deg, #2B9348, #4ADE80);
+            border-radius: 1.5rem;
+            padding: 2px;
+        }
+        
+        .calculator-inner {
+            background: white;
+            border-radius: 1.5rem;
+            height: 100%;
+        }
+        
+        .dark .calculator-inner {
+            background: #1E293B;
+        }
+        
+        .calculator-input {
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+            background: white;
+            color: #1F2937;
+        }
+        
+        .dark .calculator-input {
+            background: #0F172A;
+            border-color: #334155;
+            color: #F1F5F9;
+        }
+        
+        .calculator-input:focus {
+            outline: none;
+            border-color: #2B9348;
+            ring: 2px solid rgba(43, 147, 72, 0.2);
+        }
+        
+        .case-study-card {
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .case-study-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .service-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .image-container {
+            overflow: hidden;
+        }
+        
+        .case-study-card:hover .service-image {
+            transform: scale(1.05);
+        }
+        
+        .green-line {
+            height: 4px;
+            background: linear-gradient(90deg, #2B9348, #4ADE80, #2B9348);
+            width: 100%;
+        }
+        
+        footer {
+            background: #FFFFFF;
+            border-top: none;
+        }
+        
+        .dark footer {
+            background: #0F172A;
+        }
+        
+        footer .logo-text {
+            background: linear-gradient(135deg, #2B9348, #4ADE80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dark footer .logo-text {
+            background: linear-gradient(135deg, #4ADE80, #2B9348);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Dark mode text fixes - no black text */
+        .dark .text-gray-900 { color: #F1F5F9 !important; }
+        .dark .text-gray-800 { color: #E2E8F0 !important; }
+        .dark .text-gray-700 { color: #CBD5E1 !important; }
+        .dark .text-gray-600 { color: #94A3B8 !important; }
+        .dark .text-gray-500 { color: #9CA3AF !important; }
+        .dark .bg-gray-50 { background-color: #1E293B !important; }
+        .dark .bg-white { background-color: #0F172A !important; }
+        .dark .border-gray-200 { border-color: #334155 !important; }
+        .dark .bg-gray-100 { background-color: #1E293B !important; }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: #e5e7eb;
+            border-radius: 10px;
+            height: 6px;
+        }
+        
+        .dark input[type="range"] {
+            background: #334155;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #2B9348;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(43, 147, 72, 0.5);
+        }
+        
+        /* Full height section - no extra space */
+        .full-height-section {
+            min-height: auto;
+        }
+        
+        .section-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .stats-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="light font-inter">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-3-part">
+                <div class="nav-part-left">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-seedling"></i>
+                        <span class="logo-text">HydroFeed</span>
+                    </a>
+                </div>
+                <div class="nav-part-center">
+                    <div class="dropdown">
+                        <button class="nav-link">Home <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="index.html" class="dropdown-item">Home 1 - Farming Focus</a>
+                            <a href="home2.html" class="dropdown-item">Home 2 - Smart Dashboard</a>
+                        </div>
+                    </div>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="rio.html" class="nav-link active">RIO</a>
+                    <a href="plans.html" class="nav-link">Plans</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                    <div class="dropdown">
+                        <button class="nav-link">Dashboard <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="admin.html" class="dropdown-item">Admin Dashboard</a>
+                            <a href="farmer.html" class="dropdown-item">Farmer Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-part-right">
+                    <div class="desktop-auth-buttons">
+                        <button onclick="toggleDirection()" class="action-btn"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+                        <button onclick="toggleTheme()" class="action-btn"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                    </div>
+                    <div class="profile-dropdown">
+                        <button class="action-btn"><i data-lucide="user" class="w-4 h-4"></i></button>
+                        <div class="profile-dropdown-menu">
+                            <a href="login.html" class="dropdown-item"><i data-lucide="log-in"></i>Login</a>
+                            <a href="signup.html" class="dropdown-item"><i data-lucide="user-plus"></i>Signup</a>
+                        </div>
+                    </div>
+                    <button class="hamburger" onclick="openMobileMenu()" aria-label="Menu">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenuPanel">
+        <div class="mobile-header">
+            <a href="#" class="logo" onclick="closeMobileMenu()"><i class="fas fa-seedling"></i><span class="logo-text">HydroFeed</span></a>
+            <button onclick="closeMobileMenu()" class="mobile-close"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        <div class="mobile-nav-items">
+            <button onclick="toggleMobileSubmenu('mobileHomeSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-home mr-3"></i>HOME</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileHomeSubmenu" class="mobile-submenu-items">
+                <a href="index.html" onclick="closeMobileMenu()">Home 1</a>
+                <a href="home2.html" onclick="closeMobileMenu()">Home 2</a>
+            </div>
+            <a href="about.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-info-circle mr-3"></i>ABOUT</span></a>
+            <a href="products.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-box mr-3"></i>PRODUCTS</span></a>
+            <a href="services.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-tools mr-3"></i>SERVICES</span></a>
+            <a href="rio.html" class="mobile-nav-link active" onclick="closeMobileMenu()"><span><i class="fas fa-chart-line mr-3"></i>RIO</span></a>
+            <a href="plans.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-tag mr-3"></i>PLANS</span></a>
+            <a href="contact.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-envelope mr-3"></i>CONTACT</span></a>
+            <button onclick="toggleMobileSubmenu('mobileDashSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-chalkboard-user mr-3"></i>DASHBOARD</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileDashSubmenu" class="mobile-submenu-items">
+                <a href="admin.html">Admin Dashboard</a>
+                <a href="farmer.html">Farmer Dashboard</a>
+            </div>
+            <button onclick="toggleMobileSubmenu('mobileAuthSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-user-circle mr-3"></i>ACCOUNT</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileAuthSubmenu" class="mobile-submenu-items">
+                <a href="login.html">Login</a>
+                <a href="signup.html">Signup</a>
+            </div>
+            <div class="mobile-settings">
+                <div class="mobile-setting-item">
+                    <span class="mobile-setting-label"><i class="fa-solid fa-arrow-right-arrow-left"></i> DIRECTION</span>
+                    <button onclick="toggleDirectionMobile()" class="action-btn"><i class="fa-solid fa-left-right"></i></button>
+                </div>
+                <div class="mobile-setting-item">
+                    <span class="mobile-setting-label"><i data-lucide="moon"></i> THEME</span>
+                    <button onclick="toggleThemeMobile()" class="action-btn"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT - RIO PAGE WITH BORDER EFFECTS & FULL CONTENT -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="about-hero py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary px-4 py-2 rounded-full text-sm font-semibold mb-5">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Return on Investment</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5">
+                    Calculate Your <span class="text-primary">Farm Savings</span>
+                </h1>
+                <p class="text-xl text-gray-200 max-w-3xl mx-auto">
+                    See how much you can save by switching to hydroponic fodder — less water, lower costs, higher yields.
+                </p>
+            </div>
+        </section>
+
+        <!-- ROI Calculator Section - Full width with border effects -->
+        <section class="py-16 bg-white dark:bg-gray-900">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Interactive Tool</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">ROI Calculator</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-3">Adjust the sliders to see your potential savings</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-6">
+                    <!-- Calculator Inputs with Gradient Border Effect -->
+                    <div class="calculator-border-effect h-full">
+                        <div class="calculator-inner p-6 md:p-7 h-full">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Your Farm Details</h3>
+                            <div class="space-y-5">
+                                <div><label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Number of Livestock</label><input type="range" id="livestockRange" min="10" max="500" value="100" class="w-full"><div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1"><span>10</span><span>100</span><span>200</span><span>300</span><span>500</span></div><input type="number" id="livestockInput" value="100" class="calculator-input w-full mt-3 p-2.5 rounded-lg"></div>
+                                <div><label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Current Feed Cost ($ per head/day)</label><input type="range" id="currentCostRange" min="0.5" max="5" step="0.1" value="2.5" class="w-full"><input type="number" id="currentCostInput" value="2.5" step="0.1" class="calculator-input w-full mt-3 p-2.5 rounded-lg"></div>
+                                <div><label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Hydroponic Fodder Cost ($ per head/day)</label><input type="range" id="hydroCostRange" min="0.3" max="3" step="0.05" value="1.2" class="w-full"><input type="number" id="hydroCostInput" value="1.2" step="0.05" class="calculator-input w-full mt-3 p-2.5 rounded-lg"></div>
+                                <div><label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">System Investment ($)</label><input type="range" id="investmentRange" min="2000" max="50000" step="1000" value="15000" class="w-full"><input type="number" id="investmentInput" value="15000" class="calculator-input w-full mt-3 p-2.5 rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Display with Gradient Border Effect -->
+                    <div class="calculator-border-effect h-full">
+                        <div class="calculator-inner p-6 md:p-7 bg-gradient-to-br from-primary/5 to-secondary/5 h-full">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Your Savings Projection</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm"><p class="text-xs text-gray-500 dark:text-gray-400">Daily Savings</p><p class="text-2xl font-black text-primary" id="dailySavings">$0</p></div>
+                                <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm"><p class="text-xs text-gray-500 dark:text-gray-400">Monthly Savings</p><p class="text-2xl font-black text-primary" id="monthlySavings">$0</p></div>
+                                <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm"><p class="text-xs text-gray-500 dark:text-gray-400">Yearly Savings</p><p class="text-2xl font-black text-primary" id="yearlySavings">$0</p></div>
+                                <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm"><p class="text-xs text-gray-500 dark:text-gray-400">Payback Period</p><p class="text-2xl font-black text-primary" id="paybackPeriod">0<span class="text-sm"> months</span></p></div>
+                            </div>
+                            <div class="mt-5 p-4 bg-primary/10 rounded-xl text-center"><p class="text-sm font-semibold text-gray-700 dark:text-gray-300">5-Year Total Savings</p><p class="text-3xl font-black text-primary" id="fiveYearSavings">$0</p></div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-4"><i class="fas fa-calculator"></i> Based on 365 days/year. Excludes water savings & environmental benefits.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Water & Environmental Savings - Full grid no extra space -->
+        <section class="py-16 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="stats-grid">
+                    <div class="rio-card text-center overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=500&h=180&fit=crop" alt="Water Savings" class="service-image"></div><div class="p-5"><i class="fas fa-tint text-4xl text-primary mb-2"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Water Savings</h3><p class="text-3xl font-black text-primary">70%</p><p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Less water compared to traditional fodder</p><div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width:70%"></div></div></div></div>
+                    <div class="rio-card text-center overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&h=180&fit=crop" alt="Land Efficiency" class="service-image"></div><div class="p-5"><i class="fas fa-leaf text-4xl text-primary mb-2"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Land Efficiency</h3><p class="text-3xl font-black text-primary">90%</p><p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Less land required for same feed output</p><div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width:90%"></div></div></div></div>
+                    <div class="rio-card text-center overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=500&h=180&fit=crop" alt="Carbon Footprint" class="service-image"></div><div class="p-5"><i class="fas fa-cloud-sun text-4xl text-primary mb-2"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Carbon Reduction</h3><p class="text-3xl font-black text-primary">60%</p><p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Lower transport & production emissions</p><div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width:60%"></div></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI Comparison Chart -->
+        <section class="py-16 bg-white dark:bg-gray-900">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">Traditional vs. Hydroponic</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-3">5-year cost comparison per 100 livestock</p>
+                </div>
+                <div class="rio-card p-5">
+                    <canvas id="roiChart" height="240"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Case Studies with images -->
+        <section class="py-16 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Success Stories</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Real Farm Results</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-3">See how other farmers achieved ROI with HydroFeed</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="case-study-card rio-card overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1595433707802-3dc8f0fed1e5?w=500&h=180&fit=crop" alt="Dairy Farm" class="service-image"></div><div class="p-5"><div class="flex items-center gap-2 mb-2"><i class="fas fa-tractor text-primary"></i><h3 class="font-bold text-gray-900 dark:text-white">Dairy Farm, WI</h3></div><p class="text-sm text-gray-600 dark:text-gray-400">200 cows • HydroStack Max</p><div class="mt-3 space-y-1 text-sm"><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Investment:</span><span class="font-semibold text-gray-900 dark:text-white">$18,500</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Payback:</span><span class="font-semibold text-primary">8 months</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Annual savings:</span><span class="font-semibold text-primary">$31,200</span></div></div></div></div>
+                    <div class="case-study-card rio-card overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=500&h=180&fit=crop" alt="Beef Ranch" class="service-image"></div><div class="p-5"><div class="flex items-center gap-2 mb-2"><i class="fas fa-hat-cowboy text-primary"></i><h3 class="font-bold text-gray-900 dark:text-white">Beef Ranch, TX</h3></div><p class="text-sm text-gray-600 dark:text-gray-400">350 head • AgriTower Elite</p><div class="mt-3 space-y-1 text-sm"><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Investment:</span><span class="font-semibold text-gray-900 dark:text-white">$42,000</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Payback:</span><span class="font-semibold text-primary">14 months</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Annual savings:</span><span class="font-semibold text-primary">$47,500</span></div></div></div></div>
+                    <div class="case-study-card rio-card overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1535268647677-300dbf3d6d1b?w=500&h=180&fit=crop" alt="Goat Farm" class="service-image"></div><div class="p-5"><div class="flex items-center gap-2 mb-2"><i class="fas fa-egg text-primary"></i><h3 class="font-bold text-gray-900 dark:text-white">Goat Farm, CA</h3></div><p class="text-sm text-gray-600 dark:text-gray-400">120 goats • HydroTray Pro</p><div class="mt-3 space-y-1 text-sm"><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Investment:</span><span class="font-semibold text-gray-900 dark:text-white">$8,200</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Payback:</span><span class="font-semibold text-primary">6 months</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Annual savings:</span><span class="font-semibold text-primary">$18,900</span></div></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-16">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-3xl p-10">
+                <i class="fas fa-file-invoice-dollar text-5xl text-primary mb-3"></i>
+                <h2 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-3">Get a Personalized ROI Analysis</h2>
+                <p class="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-6">Our experts will create a custom projection based on your farm's specific needs.</p>
+                <a href="#" class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-full font-semibold transition inline-flex items-center gap-2">Request Consultation <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Green Line Before Footer -->
+    <div class="green-line"></div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-900 pt-10 pb-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:grid md:grid-cols-4 gap-6 mb-8">
+                <div><a href="#" class="logo flex items-center gap-2 mb-3"><i class="fas fa-seedling text-2xl text-primary"></i><span class="logo-text">HydroFeed</span></a><p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p><div class="flex gap-2"><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-twitter text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-instagram text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-linkedin-in text-xs"></i></a></div></div>
+                <div><h4 class="font-bold mb-3 text-gray-900 dark:text-white">Quick Links</h4><ul class="space-y-1 text-gray-500 dark:text-gray-400 text-sm"><li><a href="index.html" class="hover:text-primary transition">Home</a></li><li><a href="about.html" class="hover:text-primary transition">About Us</a></li><li><a href="products.html" class="hover:text-primary transition">Products</a></li><li><a href="services.html" class="hover:text-primary transition">Services</a></li><li><a href="rio.html" class="hover:text-primary transition">RIO</a></li></ul></div>
+                <div><h4 class="font-bold mb-3 text-gray-900 dark:text-white">Resources</h4><ul class="space-y-1 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">ROI Calculator</a></li><li><a href="#" class="hover:text-primary transition">Feeding Guides</a></li><li><a href="#" class="hover:text-primary transition">Farmer Dashboard</a></li><li><a href="#" class="hover:text-primary transition">Support Center</a></li></ul></div>
+                <div><h4 class="font-bold mb-3 text-gray-900 dark:text-white">Contact</h4><div class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><p><i class="fas fa-map-marker-alt text-primary mr-2"></i> San Francisco, CA</p><p><i class="fas fa-envelope text-primary mr-2"></i> <a href="mailto:hello@hydrofeed.com" class="hover:text-primary">hello@hydrofeed.com</a></p><p><i class="fas fa-phone text-primary mr-2"></i> <a href="tel:+18005554321" class="hover:text-primary">+1 (800) 555-4321</a></p></div></div>
+            </div>
+            <div class="pt-4 border-t border-gray-200 dark:border-gray-800 text-center text-gray-400 text-xs">© 2025 HydroFeed — Sustainable Hydroponic Fodder & Livestock Feed Supply. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        
+        function openMobileMenu() { document.getElementById('mobileMenuPanel').classList.add('open'); document.getElementById('mobileOverlay').classList.add('active'); document.body.classList.add('menu-open'); }
+        function closeMobileMenu() { document.getElementById('mobileMenuPanel').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('active'); document.body.classList.remove('menu-open'); }
+        function toggleMobileSubmenu(id) { const sub = document.getElementById(id); if(sub) sub.classList.toggle('open'); }
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); document.body.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); setTimeout(() => lucide.createIcons(), 10); }
+        function toggleThemeMobile() { toggleTheme(); }
+        function toggleDirection() { document.documentElement.dir = document.documentElement.dir === 'rtl' ? 'ltr' : 'rtl'; }
+        function toggleDirectionMobile() { toggleDirection(); }
+        
+        if (localStorage.getItem('theme') === 'dark') { document.documentElement.classList.add('dark'); document.body.classList.add('dark'); }
+        
+        // ROI Calculator Logic
+        const livestockRange = document.getElementById('livestockRange');
+        const livestockInput = document.getElementById('livestockInput');
+        const currentCostRange = document.getElementById('currentCostRange');
+        const currentCostInput = document.getElementById('currentCostInput');
+        const hydroCostRange = document.getElementById('hydroCostRange');
+        const hydroCostInput = document.getElementById('hydroCostInput');
+        const investmentRange = document.getElementById('investmentRange');
+        const investmentInput = document.getElementById('investmentInput');
+        
+        function updateROI() {
+            let livestock = parseFloat(livestockInput.value) || 0;
+            let currentCost = parseFloat(currentCostInput.value) || 0;
+            let hydroCost = parseFloat(hydroCostInput.value) || 0;
+            let investment = parseFloat(investmentInput.value) || 0;
+            
+            let dailySavingsVal = livestock * (currentCost - hydroCost);
+            let monthlySavingsVal = dailySavingsVal * 30;
+            let yearlySavingsVal = dailySavingsVal * 365;
+            let paybackMonths = monthlySavingsVal > 0 ? investment / monthlySavingsVal : 0;
+            let fiveYearSavingsVal = (yearlySavingsVal * 5) - investment;
+            
+            document.getElementById('dailySavings').innerHTML = '$' + dailySavingsVal.toFixed(2);
+            document.getElementById('monthlySavings').innerHTML = '$' + monthlySavingsVal.toFixed(2);
+            document.getElementById('yearlySavings').innerHTML = '$' + yearlySavingsVal.toFixed(2);
+            document.getElementById('paybackPeriod').innerHTML = (paybackMonths > 0 && paybackMonths < 120 ? paybackMonths.toFixed(1) : '0') + '<span class="text-sm"> months</span>';
+            document.getElementById('fiveYearSavings').innerHTML = '$' + (fiveYearSavingsVal > 0 ? fiveYearSavingsVal.toFixed(0) : '0').toLocaleString();
+        }
+        
+        function syncInputs() { livestockInput.value = livestockRange.value; currentCostInput.value = currentCostRange.value; hydroCostInput.value = hydroCostRange.value; investmentInput.value = investmentRange.value; updateROI(); }
+        function syncRanges() { livestockRange.value = livestockInput.value; currentCostRange.value = currentCostInput.value; hydroCostRange.value = hydroCostInput.value; investmentRange.value = investmentInput.value; updateROI(); }
+        
+        livestockRange.addEventListener('input', syncInputs);
+        livestockInput.addEventListener('input', syncRanges);
+        currentCostRange.addEventListener('input', syncInputs);
+        currentCostInput.addEventListener('input', syncRanges);
+        hydroCostRange.addEventListener('input', syncInputs);
+        hydroCostInput.addEventListener('input', syncRanges);
+        investmentRange.addEventListener('input', syncInputs);
+        investmentInput.addEventListener('input', syncRanges);
+        
+        updateROI();
+        
+        // Chart.js for comparison
+        const ctx = document.getElementById('roiChart').getContext('2d');
+        const isDark = document.documentElement.classList.contains('dark');
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'], datasets: [{ label: 'Traditional Feed Cost', data: [36500, 37595, 38723, 39885, 41082], backgroundColor: '#ef4444', borderRadius: 8 }, { label: 'Hydroponic Fodder Cost', data: [17520, 18046, 18587, 19145, 19719], backgroundColor: '#2B9348', borderRadius: 8 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top', labels: { color: isDark ? '#F1F5F9' : '#1F2937' } } } }
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+    </script>
+</body>
+</html>

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>HydroFeed | Services - Hydroponic Fodder & Livestock Feed Supply</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232B9348'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13L16,10L11,7Z'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#2B9348',
+                        secondary: '#1E7E34',
+                        darkBg: '#0F172A'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'monospace']
+                    }
+                } 
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+        
+        body.light {
+            background: #F9FAFB;
+        }
+        
+        body.dark {
+            background: #0F172A;
+        }
+        
+        body.menu-open {
+            overflow: hidden;
+        }
+        
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(43, 147, 72, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .dark .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .nav-3-part {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .nav-part-left {
+            flex-shrink: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 6px 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+            color: #2B9348;
+        }
+        
+        .logo-text {
+            font-weight: 900;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #2B9348, #4ADE80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .nav-part-center {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+        
+        .nav-link {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 40px;
+            color: #1F2937;
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .dark .nav-link {
+            color: #E5E7EB;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(43, 147, 72, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            margin-top: 12px;
+            min-width: 220px;
+            background: white;
+            border-radius: 24px;
+            padding: 10px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+        }
+        
+        .dark .dropdown-menu {
+            background: #1E293B;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 16px;
+            color: #1F2937;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .dark .dropdown-item {
+            color: #E5E7EB;
+        }
+        
+        .dropdown-item i {
+            width: 18px;
+            color: #2B9348;
+        }
+        
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .profile-dropdown {
+            position: relative;
+        }
+        
+        .profile-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            margin-top: 12px;
+            min-width: 220px;
+            background: white;
+            border-radius: 24px;
+            padding: 10px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.25s ease;
+            z-index: 1001;
+        }
+        
+        [dir="ltr"] .profile-dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+        
+        [dir="rtl"] .profile-dropdown-menu {
+            left: 0;
+            right: auto;
+        }
+        
+        .dark .profile-dropdown-menu {
+            background: #1E293B;
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        
+        .profile-dropdown:hover .profile-dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .nav-part-right {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+            flex-shrink: 0;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+        
+        .hamburger {
+            display: none;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .hamburger:hover {
+            transform: scale(1.05);
+        }
+        
+        .desktop-auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .nav-link { padding: 8px 10px; font-size: 13px; }
+        }
+        
+        @media (max-width: 1100px) {
+            .nav-link { padding: 8px 8px; font-size: 12px; }
+            .nav-part-center { gap: 0.1rem; }
+        }
+        
+        @media (max-width: 1000px) {
+            .nav-part-center { display: none !important; }
+            .desktop-auth-buttons { display: none !important; }
+            .hamburger { display: flex !important; }
+            .profile-dropdown { display: none !important; }
+        }
+        
+        @media (min-width: 1001px) {
+            .hamburger { display: none !important; }
+            .nav-part-center { display: flex !important; }
+            .desktop-auth-buttons { display: flex !important; }
+            .profile-dropdown { display: block !important; }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container { padding: 0.5rem 1rem; }
+            .logo { padding: 4px 6px; }
+            .logo-text { font-size: 1.2rem; }
+            .logo i { font-size: 1.5rem; }
+            .action-btn, .hamburger { width: 36px; height: 36px; }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container { padding: 0.5rem 0.75rem; }
+            .logo-text { font-size: 1rem; }
+            .logo i { font-size: 1.3rem; }
+            .action-btn, .hamburger { width: 34px; height: 34px; }
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 85%;
+            max-width: 380px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .mobile-menu {
+            background: rgba(15, 23, 42, 0.98);
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(43, 147, 72, 0.1), rgba(30, 126, 52, 0.1));
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        
+        .mobile-close {
+            width: 48px;
+            height: 48px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            border: none;
+        }
+        
+        .mobile-nav-items {
+            padding: 0 20px 20px 20px;
+        }
+        
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            margin: 6px 0;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1F2937;
+            background: white;
+            border: 1px solid rgba(43, 147, 72, 0.2);
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+        
+        .dark .mobile-nav-link {
+            color: #E5E7EB;
+            background: rgba(43, 147, 72, 0.1);
+            border-color: rgba(74, 222, 128, 0.25);
+        }
+        
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white !important;
+            transform: translateX(5px);
+        }
+        
+        .mobile-submenu-items {
+            margin-left: 20px;
+            padding-left: 18px;
+            border-left: 2px solid #2B9348;
+            display: none;
+            animation: slideDown 0.25s ease;
+        }
+        
+        .mobile-submenu-items.open {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .mobile-submenu-items a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            margin: 8px 0;
+            border-radius: 16px;
+            color: #1F2937;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            background: white;
+            border: 1px solid rgba(43, 147, 72, 0.15);
+        }
+        
+        .dark .mobile-submenu-items a {
+            color: #E5E7EB;
+            background: rgba(43, 147, 72, 0.08);
+        }
+        
+        .mobile-submenu-items a:hover {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+        }
+        
+        .mobile-settings {
+            background: linear-gradient(135deg, rgba(43, 147, 72, 0.1), rgba(30, 126, 52, 0.1));
+            border: 1px solid rgba(43, 147, 72, 0.3);
+            border-radius: 28px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        
+        .mobile-setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        
+        .mobile-setting-label {
+            font-weight: 600;
+            color: #1F2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .dark .mobile-setting-label {
+            color: #E5E7EB;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 85px;
+        }
+        
+        @media (max-width: 1000px) {
+            .main-content {
+                padding-top: 75px;
+            }
+        }
+        
+        /* Services Page Specific Styles */
+        .about-hero {
+            background: linear-gradient(135deg, #0a2e1a 0%, #1a4a2a 50%, #2d6a3a 100%);
+        }
+        
+        .service-card {
+            transition: all 0.4s ease;
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dark .service-card {
+            background: #1E293B;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .service-card:hover .service-image {
+            transform: scale(1.05);
+        }
+        
+        .image-container {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .process-step {
+            transition: all 0.3s ease;
+        }
+        
+        .process-step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .green-line {
+            height: 4px;
+            background: linear-gradient(90deg, #2B9348, #4ADE80, #2B9348);
+            width: 100%;
+        }
+        
+        footer {
+            background: #FFFFFF;
+            border-top: none;
+        }
+        
+        .dark footer {
+            background: #0F172A;
+        }
+        
+        footer .logo-text {
+            background: linear-gradient(135deg, #2B9348, #4ADE80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dark footer .logo-text {
+            background: linear-gradient(135deg, #4ADE80, #2B9348);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dark .text-gray-900 { color: #F1F5F9 !important; }
+        .dark .text-gray-800 { color: #E2E8F0 !important; }
+        .dark .text-gray-700 { color: #CBD5E1 !important; }
+        .dark .text-gray-600 { color: #94A3B8 !important; }
+        .dark .bg-gray-50 { background-color: #1E293B !important; }
+        .dark .bg-white { background-color: #0F172A !important; }
+        .dark .border-gray-200 { border-color: #334155 !important; }
+        .dark .bg-gray-100 { background-color: #1E293B !important; }
+    </style>
+</head>
+<body class="light font-inter">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-3-part">
+                <div class="nav-part-left">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-seedling"></i>
+                        <span class="logo-text">HydroFeed</span>
+                    </a>
+                </div>
+                <div class="nav-part-center">
+                    <div class="dropdown">
+                        <button class="nav-link">Home <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="index.html" class="dropdown-item">Home 1 - Farming Focus</a>
+                            <a href="home2.html" class="dropdown-item">Home 2 - Smart Dashboard</a>
+                        </div>
+                    </div>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="services.html" class="nav-link active">Services</a>
+                    <a href="rio.html" class="nav-link">RIO</a>
+                    <a href="plans.html" class="nav-link">Plans</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                    <div class="dropdown">
+                        <button class="nav-link">Dashboard <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+                        <div class="dropdown-menu">
+                            <a href="admin.html" class="dropdown-item">Admin Dashboard</a>
+                            <a href="farmer.html" class="dropdown-item">Farmer Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-part-right">
+                    <div class="desktop-auth-buttons">
+                        <button onclick="toggleDirection()" class="action-btn"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+                        <button onclick="toggleTheme()" class="action-btn"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                    </div>
+                    <div class="profile-dropdown">
+                        <button class="action-btn"><i data-lucide="user" class="w-4 h-4"></i></button>
+                        <div class="profile-dropdown-menu">
+                            <a href="login.html" class="dropdown-item"><i data-lucide="log-in"></i>Login</a>
+                            <a href="signup.html" class="dropdown-item"><i data-lucide="user-plus"></i>Signup</a>
+                        </div>
+                    </div>
+                    <button class="hamburger" onclick="openMobileMenu()" aria-label="Menu">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenuPanel">
+        <div class="mobile-header">
+            <a href="#" class="logo" onclick="closeMobileMenu()"><i class="fas fa-seedling"></i><span class="logo-text">HydroFeed</span></a>
+            <button onclick="closeMobileMenu()" class="mobile-close"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        <div class="mobile-nav-items">
+            <button onclick="toggleMobileSubmenu('mobileHomeSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-home mr-3"></i>HOME</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileHomeSubmenu" class="mobile-submenu-items">
+                <a href="index.html" onclick="closeMobileMenu()">Home 1</a>
+                <a href="home2.html" onclick="closeMobileMenu()">Home 2</a>
+            </div>
+            <a href="about.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-info-circle mr-3"></i>ABOUT</span></a>
+            <a href="products.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-box mr-3"></i>PRODUCTS</span></a>
+            <a href="services.html" class="mobile-nav-link active" onclick="closeMobileMenu()"><span><i class="fas fa-tools mr-3"></i>SERVICES</span></a>
+            <a href="rio.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-chart-line mr-3"></i>RIO</span></a>
+            <a href="plans.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-tag mr-3"></i>PLANS</span></a>
+            <a href="contact.html" class="mobile-nav-link" onclick="closeMobileMenu()"><span><i class="fas fa-envelope mr-3"></i>CONTACT</span></a>
+            <button onclick="toggleMobileSubmenu('mobileDashSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-chalkboard-user mr-3"></i>DASHBOARD</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileDashSubmenu" class="mobile-submenu-items">
+                <a href="admin.html">Admin Dashboard</a>
+                <a href="farmer.html">Farmer Dashboard</a>
+            </div>
+            <button onclick="toggleMobileSubmenu('mobileAuthSubmenu')" class="mobile-nav-link">
+                <span><i class="fas fa-user-circle mr-3"></i>ACCOUNT</span>
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </button>
+            <div id="mobileAuthSubmenu" class="mobile-submenu-items">
+                <a href="login.html">Login</a>
+                <a href="signup.html">Signup</a>
+            </div>
+            <div class="mobile-settings">
+                <div class="mobile-setting-item">
+                    <span class="mobile-setting-label"><i class="fa-solid fa-arrow-right-arrow-left"></i> DIRECTION</span>
+                    <button onclick="toggleDirectionMobile()" class="action-btn"><i class="fa-solid fa-left-right"></i></button>
+                </div>
+                <div class="mobile-setting-item">
+                    <span class="mobile-setting-label"><i data-lucide="moon"></i> THEME</span>
+                    <button onclick="toggleThemeMobile()" class="action-btn"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT - SERVICES PAGE WITH IMAGES -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="about-hero py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                    <i class="fas fa-handshake"></i>
+                    <span>What We Offer</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6">
+                    Comprehensive <span class="text-primary">Farm Solutions</span>
+                </h1>
+                <p class="text-xl text-gray-200 max-w-3xl mx-auto">
+                    From system design to ongoing support — we partner with you every step of the way to maximize your farm's productivity.
+                </p>
+            </div>
+        </section>
+
+        <!-- Services Grid with Images -->
+        <section class="py-20 bg-white dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Our Expertise</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Services We Provide</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">End-to-end support for hydroponic fodder farming operations</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service 1 - System Design -->
+                    <div class="service-card">
+                        <div class="image-container"><img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=500&h=250&fit=crop" alt="System Design & Consultation" class="service-image"></div>
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-drafting-compass text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">System Design & Consultation</h3></div>
+                            <p class="text-gray-600 dark:text-gray-300">Custom hydroponic system layout optimized for your barn space, livestock count, and climate conditions.</p>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Site assessment</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">3D modeling</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">ROI projection</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service 2 - Dashboard Integration -->
+                    <div class="service-card">
+                        <div class="image-container"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=250&fit=crop" alt="Dashboard Setup & Integration" class="service-image"></div>
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-microchip text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Dashboard Setup & Integration</h3></div>
+                            <p class="text-gray-600 dark:text-gray-300">Full deployment of FeedManager dashboard for recurring deliveries, tray inventory tracking, and feeding schedules.</p>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Custom workflows</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">API integration</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Team training</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service 3 - Installation -->
+                    <div class="service-card">
+                        <div class="image-container"><img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=500&h=250&fit=crop" alt="Installation & Commissioning" class="service-image"></div>
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-tools text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Installation & Commissioning</h3></div>
+                            <p class="text-gray-600 dark:text-gray-300">Professional on-site installation, calibration, and testing of all hydroponic equipment and sensors.</p>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">White-glove service</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Quality assurance</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Warranty activation</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service 4 - Farmer Training -->
+                    <div class="service-card">
+                        <div class="image-container"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&h=250&fit=crop" alt="Farmer Training & Onboarding" class="service-image"></div>
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-chalkboard-user text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Farmer Training & Onboarding</h3></div>
+                            <p class="text-gray-600 dark:text-gray-300">Comprehensive training for you and your staff on system operation, maintenance, and dashboard management.</p>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Hands-on workshops</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Video library</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">24/7 support portal</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service 5 - Nutritional Analysis -->
+                    <div class="service-card">
+                        <div class="image-container"><img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?w=500&h=250&fit=crop" alt="Nutritional Analysis" class="service-image"></div>
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-chart-line text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Nutritional Analysis & Optimization</h3></div>
+                            <p class="text-gray-600 dark:text-gray-300">Lab-tested feed analysis, custom seed blends, and feeding schedule optimization for maximum livestock health.</p>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Protein profiling</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Digestibility tests</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Custom blends</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service 6 - Technical Support -->
+                    <div class="service-card">
+                        <div class="image-container"><img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=250&fit=crop" alt="24/7 Technical Support" class="service-image"></div>
+                        <div class="p-6 flex-grow">
+                            <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-headset text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">24/7 Technical Support & Maintenance</h3></div>
+                            <p class="text-gray-600 dark:text-gray-300">Ongoing remote monitoring, preventive maintenance, and emergency support to keep your system running smoothly.</p>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Remote diagnostics</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Scheduled maintenance</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Emergency dispatch</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Process Section -->
+        <section class="py-20 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Simple Process</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">How We Work With You</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">From first contact to full operation — we're with you every step</p>
+                </div>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">1</span></div><h3 class="font-bold text-lg">Consultation</h3><p class="text-sm text-gray-500 dark:text-gray-400">Free farm assessment & needs analysis</p></div>
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">2</span></div><h3 class="font-bold text-lg">Design & Quote</h3><p class="text-sm text-gray-500 dark:text-gray-400">Custom system design + ROI projection</p></div>
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">3</span></div><h3 class="font-bold text-lg">Installation</h3><p class="text-sm text-gray-500 dark:text-gray-400">Professional setup & dashboard integration</p></div>
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">4</span></div><h3 class="font-bold text-lg">Training & Launch</h3><p class="text-sm text-gray-500 dark:text-gray-400">Staff training & ongoing support</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support Plans / Maintenance Tiers -->
+        <section class="py-20 bg-white dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Flexible Plans</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Support & Maintenance Plans</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">Choose the level of support that fits your farm's needs</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition"><div class="text-primary text-3xl mb-3"><i class="fas fa-life-ring"></i></div><h3 class="text-xl font-bold">Basic Care</h3><p class="text-3xl font-black text-primary my-3">$99<span class="text-sm text-gray-500">/mo</span></p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ Email support</li><li>✓ Dashboard updates</li><li>✓ Monthly health report</li><li>✗ On-site visits</li></ul><a href="#" class="mt-6 inline-block border border-primary text-primary px-5 py-2 rounded-full hover:bg-primary hover:text-white transition">Select</a></div>
+                    <div class="bg-primary/5 dark:bg-primary/10 rounded-2xl p-6 text-center border-2 border-primary relative hover:shadow-xl transition"><div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white text-xs px-3 py-1 rounded-full">Most Popular</div><div class="text-primary text-3xl mb-3"><i class="fas fa-shield-alt"></i></div><h3 class="text-xl font-bold">Pro Support</h3><p class="text-3xl font-black text-primary my-3">$249<span class="text-sm text-gray-500">/mo</span></p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ 24/7 priority support</li><li>✓ Quarterly on-site visit</li><li>✓ Real-time monitoring</li><li>✓ Discounted parts</li></ul><a href="#" class="mt-6 inline-block bg-primary text-white px-5 py-2 rounded-full hover:bg-secondary transition">Select</a></div>
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition"><div class="text-primary text-3xl mb-3"><i class="fas fa-crown"></i></div><h3 class="text-xl font-bold">Enterprise</h3><p class="text-3xl font-black text-primary my-3">Custom</p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ Dedicated account manager</li><li>✓ Unlimited on-site visits</li><li>✓ Custom integration</li><li>✓ 2-hour response SLA</li></ul><a href="#" class="mt-6 inline-block border border-primary text-primary px-5 py-2 rounded-full hover:bg-primary hover:text-white transition">Contact us</a></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonial Section -->
+        <section class="py-16 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-5xl mx-auto px-4 text-center">
+                <i class="fas fa-quote-left text-4xl text-primary opacity-50 mb-4"></i>
+                <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-200 italic max-w-3xl mx-auto">"HydroFeed's installation and training team had us up and running in 3 days. The dashboard integration for our feed deliveries has saved us 40% on labor costs."</p>
+                <div class="mt-6"><div class="font-bold text-gray-900 dark:text-white">— Michael Rodriguez, Dairy Farm Owner</div><div class="text-sm text-gray-500">California, USA</div></div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="py-20">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-3xl p-12">
+                <i class="fas fa-calendar-check text-5xl text-primary mb-4"></i>
+                <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-4">Ready to Get Started?</h2>
+                <p class="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-8">Schedule a free consultation with our agronomy experts today.</p>
+                <div class="flex flex-wrap justify-center gap-4"><a href="#" class="bg-primary hover:bg-secondary text-white px-8 py-3 rounded-full font-semibold transition">Book Consultation</a><a href="#" class="bg-transparent border-2 border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded-full font-semibold transition">Call Sales</a></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Green Line Before Footer -->
+    <div class="green-line"></div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-900 pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:grid md:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <a href="#" class="logo flex items-center gap-2 mb-4 group">
+                        <i class="fas fa-seedling text-2xl text-primary"></i>
+                        <span class="logo-text">HydroFeed</span>
+                    </a>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-twitter text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-instagram text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-linkedin-in text-xs"></i></a>
+                    </div>
+                </div>
+                <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="index.html" class="hover:text-primary transition">Home</a></li><li><a href="about.html" class="hover:text-primary transition">About Us</a></li><li><a href="products.html" class="hover:text-primary transition">Products</a></li><li><a href="services.html" class="hover:text-primary transition">Services</a></li><li><a href="contact.html" class="hover:text-primary transition">Contact</a></li></ul></div>
+                <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Resources</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">ROI Calculator</a></li><li><a href="#" class="hover:text-primary transition">Feeding Guides</a></li><li><a href="#" class="hover:text-primary transition">Farmer Dashboard</a></li><li><a href="#" class="hover:text-primary transition">Support Center</a></li><li><a href="#" class="hover:text-primary transition">Blog</a></li></ul></div>
+                <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Contact Info</h4><div class="space-y-3 text-gray-500 dark:text-gray-400 text-sm"><p><i class="fas fa-map-marker-alt text-primary mr-2"></i> San Francisco, CA</p><p><i class="fas fa-envelope text-primary mr-2"></i> <a href="mailto:hello@hydrofeed.com" class="hover:text-primary">hello@hydrofeed.com</a></p><p><i class="fas fa-phone text-primary mr-2"></i> <a href="tel:+18005554321" class="hover:text-primary">+1 (800) 555-4321</a></p><p><i class="fas fa-clock text-primary mr-2"></i> Mon-Fri: 9AM - 6PM EST</p></div></div>
+            </div>
+            <div class="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 text-xs"><p>© 2025 HydroFeed — Sustainable Hydroponic Fodder & Livestock Feed Supply. All rights reserved.</p><div class="flex gap-6"><a href="#" class="hover:text-primary transition">Privacy Policy</a><a href="#" class="hover:text-primary transition">Terms of Service</a><a href="#" class="hover:text-primary transition">Cookie Policy</a></div></div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        
+        function openMobileMenu() {
+            document.getElementById('mobileMenuPanel').classList.add('open');
+            document.getElementById('mobileOverlay').classList.add('active');
+            document.body.classList.add('menu-open');
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobileMenuPanel').classList.remove('open');
+            document.getElementById('mobileOverlay').classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+        function toggleMobileSubmenu(id) { const sub = document.getElementById(id); if(sub) sub.classList.toggle('open'); }
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            setTimeout(() => lucide.createIcons(), 10);
+        }
+        function toggleThemeMobile() { toggleTheme(); }
+        function toggleDirection() { document.documentElement.dir = document.documentElement.dir === 'rtl' ? 'ltr' : 'rtl'; }
+        function toggleDirectionMobile() { toggleDirection(); }
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark');
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+    </script>
+</body>
+</html>

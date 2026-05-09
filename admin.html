@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>HydroFeed | Admin Dashboard - Farm Feed Management System</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232B9348'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13L16,10L11,7Z'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#2B9348',
+                        secondary: '#1E7E34',
+                        darkBg: '#0F172A'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'monospace']
+                    }
+                } 
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+            background: #F3F4F6;
+        }
+        
+        body.dark {
+            background: #0F172A;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2B9348;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            transition: all 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+        body.dark .sidebar {
+            background: #1E293B;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        }
+        [dir="rtl"] .sidebar {
+            left: auto;
+            right: 0;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        [dir="rtl"] .main-content {
+            margin-left: 0;
+            margin-right: 280px;
+        }
+        
+        /* Fixed Top Bar */
+        .top-bar-fixed {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: #F9FAFB;
+            border-bottom: 1px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+        body.dark .top-bar-fixed {
+            background: #0F172A;
+            border-bottom-color: #334155;
+        }
+        
+        /* Scrollable Content */
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            scroll-behavior: smooth;
+        }
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: #2B9348;
+            border-radius: 10px;
+        }
+        .dark .scrollable-content::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 200;
+            }
+            [dir="rtl"] .sidebar {
+                transform: translateX(100%);
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            [dir="rtl"] .main-content {
+                margin-right: 0;
+            }
+        }
+        
+        /* Navigation */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            margin: 4px 12px;
+            border-radius: 12px;
+            color: #4B5563;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        body.dark .nav-item {
+            color: #94A3B8;
+        }
+        .nav-item:hover {
+            background: rgba(43, 147, 72, 0.1);
+            color: #2B9348;
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, #2B9348, #1E7E34);
+            color: white;
+            box-shadow: 0 4px 12px rgba(43, 147, 72, 0.3);
+        }
+        .nav-item i {
+            width: 22px;
+            font-size: 1.2rem;
+        }
+        
+        /* Cards */
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        body.dark .stat-card {
+            background: #1E293B;
+            border-color: #334155;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        body.dark .data-table th, body.dark .data-table td {
+            border-bottom-color: #334155;
+        }
+        .data-table th {
+            font-weight: 600;
+            color: #374151;
+        }
+        body.dark .data-table th {
+            color: #E2E8F0;
+        }
+        .data-table td {
+            color: #6B7280;
+        }
+        body.dark .data-table td {
+            color: #CBD5E1;
+        }
+        
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .badge-success { background: rgba(43, 147, 72, 0.15); color: #2B9348; }
+        .badge-warning { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+        .badge-danger { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
+        .badge-info { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
+        
+        /* Profile Dropdown */
+        .profile-dropdown { position: relative; }
+        .profile-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease;
+            z-index: 50;
+            border: 1px solid #e5e7eb;
+        }
+        body.dark .profile-menu {
+            background: #1E293B;
+            border-color: #334155;
+        }
+        .profile-dropdown:hover .profile-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            color: #4B5563;
+        }
+        body.dark .profile-menu-item {
+            color: #CBD5E1;
+        }
+        .profile-menu-item:hover {
+            background: rgba(43, 147, 72, 0.1);
+            color: #2B9348;
+        }
+        
+        /* Action Buttons */
+        .action-btn-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #f3f4f6;
+            color: #4B5563;
+        }
+        body.dark .action-btn-icon {
+            background: #334155;
+            color: #CBD5E1;
+        }
+        .action-btn-icon:hover {
+            background: #2B9348;
+            color: white;
+        }
+        
+        .mobile-menu-btn { display: none; }
+        @media (max-width: 1024px) { .mobile-menu-btn { display: flex; } }
+        
+        [dir="rtl"] .data-table th, [dir="rtl"] .data-table td { text-align: right; }
+        
+        /* Dark mode text fixes - NO BLACK TEXT ANYWHERE */
+        .dark .text-gray-900 { color: #F1F5F9 !important; }
+        .dark .text-gray-800 { color: #E2E8F0 !important; }
+        .dark .text-gray-700 { color: #CBD5E1 !important; }
+        .dark .text-gray-600 { color: #94A3B8 !important; }
+        .dark .text-gray-500 { color: #9CA3AF !important; }
+        .dark .text-gray-400 { color: #a1a1aa !important; }
+        .dark .text-primary { color: #4ADE80 !important; }
+        .dark .bg-gray-50 { background-color: #1E293B !important; }
+        .dark .bg-white { background-color: #0F172A !important; }
+        .dark .border-gray-200 { border-color: #334155 !important; }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            max-width: 500px;
+            width: 90%;
+            padding: 1.5rem;
+        }
+        .dark .modal-content {
+            background: #1E293B;
+        }
+        
+        /* Responsive Grid Fixes */
+        @media (max-width: 640px) {
+            .scrollable-content {
+                padding: 1rem;
+            }
+            .stat-card {
+                padding: 1rem;
+            }
+            .data-table th, .data-table td {
+                padding: 8px;
+                font-size: 0.75rem;
+            }
+        }
+        
+        canvas {
+            max-height: 200px;
+            width: 100% !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-seedling text-2xl text-primary"></i>
+                <span class="logo-text text-xl font-black bg-gradient-to-r from-primary to-green-400 bg-clip-text text-transparent font-orbitron">HydroFeed</span>
+                <span class="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full ml-2">Admin</span>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Farm Feed Management System</p>
+        </div>
+        
+        <nav class="py-4">
+            <div class="nav-item active" data-section="overview"><i class="fas fa-chart-pie"></i><span>Dashboard Overview</span></div>
+            <div class="nav-item" data-section="farms"><i class="fas fa-tractor"></i><span>Registered Farms</span></div>
+            <div class="nav-item" data-section="orders"><i class="fas fa-truck"></i><span>Feed Orders</span></div>
+            <div class="nav-item" data-section="inventory"><i class="fas fa-boxes"></i><span>Tray Inventory</span></div>
+            <div class="nav-item" data-section="users"><i class="fas fa-users"></i><span>Farmers</span></div>
+            <div class="nav-item" data-section="reports"><i class="fas fa-file-alt"></i><span>Reports</span></div>
+            <div class="nav-item" data-section="settings"><i class="fas fa-cog"></i><span>Settings</span></div>
+        </nav>
+        
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-xs text-gray-500 dark:text-gray-400 text-center"><i class="fas fa-shield-alt"></i> Secure Admin Portal v2.0</div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Fixed Top Bar -->
+        <div class="top-bar-fixed px-4 sm:px-6 py-4">
+            <div class="flex justify-between items-center flex-wrap gap-3">
+                <div class="flex items-center gap-3">
+                    <button class="mobile-menu-btn action-btn-icon" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="pageTitle">Dashboard Overview</h1>
+                        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Welcome back, Admin</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleTheme()" class="action-btn-icon" title="Theme"><i data-lucide="moon" class="w-4 h-4 dark:hidden"></i><i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i></button>
+                    <button onclick="toggleDirection()" class="action-btn-icon" title="RTL/LTR"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+                    <div class="profile-dropdown">
+                        <div class="action-btn-icon cursor-pointer"><i class="fas fa-user-circle text-xl"></i></div>
+                        <div class="profile-menu">
+                            <div class="profile-menu-item" onclick="showProfileModal()"><i class="fas fa-user"></i><span>My Profile</span></div>
+                            <div class="profile-menu-item" onclick="showNotificationModal()"><i class="fas fa-bell"></i><span>Notifications <span class="ml-2 bg-primary text-white text-xs px-1.5 rounded-full">3</span></span></div>
+                            <div class="profile-menu-item" onclick="showSecurityModal()"><i class="fas fa-shield-alt"></i><span>Security</span></div>
+                            <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                            <div class="profile-menu-item text-red-500 dark:text-red-400"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scrollable Content -->
+        <div class="scrollable-content">
+            <!-- Overview Section -->
+            <div id="overviewSection">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6">
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Total Farms</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">247</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-tractor text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-green-600 dark:text-green-400"><i class="fas fa-arrow-up"></i> +12 this month</div></div>
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Active Orders</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">184</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-truck text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-orange-600 dark:text-orange-400">42 pending delivery</div></div>
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Trays in Stock</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">3,842</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-boxes text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-yellow-600 dark:text-yellow-400">Low stock alert: 156 trays</div></div>
+                    <div class="stat-card"><div class="flex justify-between items-start"><div><p class="text-gray-500 dark:text-gray-400 text-sm">Total Revenue</p><p class="text-2xl font-bold text-gray-900 dark:text-white mt-1">$48.2K</p></div><div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fas fa-dollar-sign text-primary text-xl"></i></div></div><div class="mt-3 text-xs text-green-600 dark:text-green-400"><i class="fas fa-arrow-up"></i> +18% vs last month</div></div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                    <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-3">Feed Orders Trend</h3><canvas id="ordersChart" height="200"></canvas></div>
+                    <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-3">Tray Utilization by Farm Type</h3><canvas id="trayChart" height="200"></canvas></div>
+                </div>
+                
+                <div class="stat-card p-4 overflow-x-auto"><div class="flex justify-between items-center mb-4 flex-wrap gap-2"><h3 class="font-semibold text-gray-900 dark:text-white">Recent Feed Orders</h3><a href="#" class="text-primary text-sm hover:underline">View All</a></div>
+                <table class="data-table min-w-[550px]"><thead><tr><th>Order ID</th><th>Farm Name</th><th>Feed Type</th><th>Quantity</th><th>Status</th><th>Date</th></tr></thead><tbody>
+                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2841</td><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">240 trays</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-15</td></tr>
+                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2842</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Wheat Grass</td><td class="text-gray-700 dark:text-gray-300">180 trays</td><td><span class="badge badge-warning">In Transit</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-14</td></tr>
+                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2843</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Mixed Grain</td><td class="text-gray-700 dark:text-gray-300">320 trays</td><td><span class="badge badge-warning">Processing</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-14</td></tr>
+                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2844</td><td class="text-gray-700 dark:text-gray-300">Blue Sky Ranch</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">150 trays</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-13</td></tr>
+                </tbody></table></div>
+            </div>
+            
+            <!-- Farms Section -->
+            <div id="farmsSection" class="hidden"><div class="stat-card p-4 overflow-x-auto"><div class="flex justify-between items-center mb-4 flex-wrap gap-2"><h3 class="font-semibold text-gray-900 dark:text-white">Registered Farms</h3><button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-secondary transition">+ Add Farm</button></div>
+            <table class="data-table min-w-[650px]"><thead><tr><th>Farm Name</th><th>Owner</th><th>Location</th><th>Livestock</th><th>Active Trays</th><th>Status</th></tr></thead><tbody>
+                <tr><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">John Anderson</td><td class="text-gray-700 dark:text-gray-300">Wisconsin</td><td class="text-gray-700 dark:text-gray-300">320 cows</td><td class="text-gray-700 dark:text-gray-300">480</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Sarah Miller</td><td class="text-gray-700 dark:text-gray-300">Texas</td><td class="text-gray-700 dark:text-gray-300">520 cattle</td><td class="text-gray-700 dark:text-gray-300">720</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Robert Chen</td><td class="text-gray-700 dark:text-gray-300">California</td><td class="text-gray-700 dark:text-gray-300">180 goats</td><td class="text-gray-700 dark:text-gray-300">240</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">Blue Sky Ranch</td><td class="text-gray-700 dark:text-gray-300">Emily Davis</td><td class="text-gray-700 dark:text-gray-300">Colorado</td><td class="text-gray-700 dark:text-gray-300">420 sheep</td><td class="text-gray-700 dark:text-gray-300">360</td><td><span class="badge badge-warning">Pending</span></td></tr>
+            </tbody></table></div></div>
+            
+            <!-- Feed Orders Section -->
+            <div id="ordersSection" class="hidden"><div class="stat-card p-4 overflow-x-auto"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">All Feed Orders</h3>
+            <table class="data-table min-w-[600px]"><thead><td><th>Order ID</th><th>Farm</th><th>Type</th><th>Trays</th><th>Delivery Date</th><th>Status</th></tr></thead><tbody>
+                <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2841</td><td class="text-gray-700 dark:text-gray-300">Green Valley</td><td class="text-gray-700 dark:text-gray-300">Barley</td><td class="text-gray-700 dark:text-gray-300">240</td><td class="text-gray-700 dark:text-gray-300">Mar 15</td><td><span class="badge badge-success">Completed</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2842</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Wheat</td><td class="text-gray-700 dark:text-gray-300">180</td><td class="text-gray-700 dark:text-gray-300">Mar 17</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2843</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Mixed</td><td class="text-gray-700 dark:text-gray-300">320</td><td class="text-gray-700 dark:text-gray-300">Mar 18</td><td><span class="badge badge-warning">Processing</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2844</td><td class="text-gray-700 dark:text-gray-300">Blue Sky</td><td class="text-gray-700 dark:text-gray-300">Barley</td><td class="text-gray-700 dark:text-gray-300">150</td><td class="text-gray-700 dark:text-gray-300">Mar 20</td><td><span class="badge badge-info">Confirmed</span></td></tr>
+            </tbody></table></div></div>
+            
+            <!-- Inventory Section -->
+            <div id="inventorySection" class="hidden"><div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
+                <div class="stat-card text-center"><i class="fas fa-layer-group text-3xl text-primary mb-2"></i><p class="text-2xl font-bold text-gray-900 dark:text-white">3,842</p><p class="text-sm text-gray-500 dark:text-gray-400">Total Trays</p></div>
+                <div class="stat-card text-center"><i class="fas fa-check-circle text-3xl text-green-500 mb-2"></i><p class="text-2xl font-bold text-gray-900 dark:text-white">2,156</p><p class="text-sm text-gray-500 dark:text-gray-400">In Use</p></div>
+                <div class="stat-card text-center"><i class="fas fa-box text-3xl text-yellow-500 mb-2"></i><p class="text-2xl font-bold text-gray-900 dark:text-white">1,686</p><p class="text-sm text-gray-500 dark:text-gray-400">Available</p></div>
+            </div>
+            <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Tray Inventory by Farm</h3>
+            <div class="space-y-3"><div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Green Valley Dairy</span><span class="text-gray-600 dark:text-gray-400">480 / 600 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div>
+            <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Sunrise Ranch</span><span class="text-gray-600 dark:text-gray-400">720 / 900 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div>
+            <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Oakwood Farm</span><span class="text-gray-600 dark:text-gray-400">240 / 300 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div>
+            <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Blue Sky Ranch</span><span class="text-gray-600 dark:text-gray-400">360 / 450 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div></div></div></div>
+            
+            <!-- Farmers Section -->
+            <div id="usersSection" class="hidden"><div class="stat-card p-4 overflow-x-auto"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Registered Farmers</h3>
+            <table class="data-table min-w-[550px]"><thead><tr><th>Name</th><th>Email</th><th>Farm</th><th>Joined</th><th>Status</th></tr></thead><tbody>
+                <tr><td class="text-gray-700 dark:text-gray-300">John Anderson</td><td class="text-gray-700 dark:text-gray-300">john@greenvalley.com</td><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">Jan 2024</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">Sarah Miller</td><td class="text-gray-700 dark:text-gray-300">sarah@sunrise.com</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Feb 2024</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">Robert Chen</td><td class="text-gray-700 dark:text-gray-300">robert@oakwood.com</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Dec 2023</td><td><span class="badge badge-success">Active</span></td></tr>
+            </tbody></table></div></div>
+            
+            <!-- Reports Section -->
+            <div id="reportsSection" class="hidden"><div class="stat-card p-6 text-center"><i class="fas fa-chart-line text-5xl text-primary mb-4"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white">Financial Reports</h3><p class="text-gray-500 dark:text-gray-400 mt-2">Download monthly, quarterly, and annual reports</p><div class="flex flex-wrap justify-center gap-3 mt-6"><button class="bg-primary text-white px-5 py-2 rounded-lg">Monthly Report</button><button class="border border-primary text-primary px-5 py-2 rounded-lg hover:bg-primary hover:text-white transition">Quarterly Report</button><button class="border border-gray-300 text-gray-700 dark:text-gray-300 px-5 py-2 rounded-lg hover:bg-primary hover:text-white transition">Annual Report</button></div></div></div>
+            
+            <!-- Settings Section -->
+            <div id="settingsSection" class="hidden"><div class="stat-card p-6"><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">System Settings</h3><div class="space-y-4"><div class="flex flex-wrap justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700 gap-2"><span class="text-gray-700 dark:text-gray-300">Email Notifications</span><button class="bg-primary text-white px-4 py-1 rounded-full text-sm">Enabled</button></div>
+            <div class="flex flex-wrap justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700 gap-2"><span class="text-gray-700 dark:text-gray-300">Auto-backup</span><button class="bg-primary text-white px-4 py-1 rounded-full text-sm">Daily</button></div>
+            <div class="flex flex-wrap justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700 gap-2"><span class="text-gray-700 dark:text-gray-300">Data Retention</span><button class="bg-primary text-white px-4 py-1 rounded-full text-sm">90 days</button></div></div></div></div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay" onclick="closeModal(event)"><div class="modal-content" onclick="event.stopPropagation()"><div id="modalBody"></div><button class="mt-4 bg-primary text-white px-4 py-2 rounded-lg" onclick="closeModal()">Close</button></div></div>
+
+<script>
+    lucide.createIcons();
+    
+    let currentSection = 'overview';
+    let ordersChart, trayChart;
+    
+    function toggleTheme() {
+        document.documentElement.classList.toggle('dark');
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        setTimeout(() => {
+            lucide.createIcons();
+            refreshCharts();
+        }, 50);
+    }
+    
+    function refreshCharts() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const textColor = isDark ? '#F1F5F9' : '#1F2937';
+        
+        if (ordersChart) ordersChart.destroy();
+        if (trayChart) trayChart.destroy();
+        
+        ordersChart = new Chart(document.getElementById('ordersChart'), {
+            type: 'line',
+            data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ label: 'Feed Orders', data: [145, 168, 192, 210, 245, 284], borderColor: '#2B9348', backgroundColor: 'rgba(43,147,72,0.1)', fill: true, tension: 0.3 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: textColor } } } }
+        });
+        trayChart = new Chart(document.getElementById('trayChart'), {
+            type: 'doughnut',
+            data: { labels: ['Dairy Farms', 'Cattle Ranches', 'Goat Farms', 'Sheep Farms'], datasets: [{ data: [42, 35, 15, 8], backgroundColor: ['#2B9348', '#4ADE80', '#1E7E34', '#86EFAC'], borderWidth: 0 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { color: textColor } } } }
+        });
+    }
+    
+    function toggleDirection() {
+        const currentDir = document.documentElement.dir;
+        document.documentElement.dir = currentDir === 'rtl' ? 'ltr' : 'rtl';
+    }
+    
+    function toggleMobileSidebar() {
+        document.getElementById('sidebar').classList.toggle('mobile-open');
+    }
+    
+    function switchToSection(section) {
+        currentSection = section;
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        document.querySelector(`.nav-item[data-section="${section}"]`).classList.add('active');
+        
+        document.getElementById('overviewSection').classList.add('hidden');
+        document.getElementById('farmsSection').classList.add('hidden');
+        document.getElementById('ordersSection').classList.add('hidden');
+        document.getElementById('inventorySection').classList.add('hidden');
+        document.getElementById('usersSection').classList.add('hidden');
+        document.getElementById('reportsSection').classList.add('hidden');
+        document.getElementById('settingsSection').classList.add('hidden');
+        
+        if (section === 'overview') document.getElementById('overviewSection').classList.remove('hidden');
+        if (section === 'farms') document.getElementById('farmsSection').classList.remove('hidden');
+        if (section === 'orders') document.getElementById('ordersSection').classList.remove('hidden');
+        if (section === 'inventory') document.getElementById('inventorySection').classList.remove('hidden');
+        if (section === 'users') document.getElementById('usersSection').classList.remove('hidden');
+        if (section === 'reports') document.getElementById('reportsSection').classList.remove('hidden');
+        if (section === 'settings') document.getElementById('settingsSection').classList.remove('hidden');
+        
+        const titles = { overview: 'Dashboard Overview', farms: 'Registered Farms', orders: 'Feed Orders', inventory: 'Tray Inventory', users: 'Farmers', reports: 'Reports', settings: 'Settings' };
+        document.getElementById('pageTitle').innerText = titles[section] || 'Dashboard';
+        
+        if (window.innerWidth <= 1024) document.getElementById('sidebar').classList.remove('mobile-open');
+    }
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const section = this.dataset.section;
+            switchToSection(section);
+        });
+    });
+    
+    function showProfileModal() {
+        document.getElementById('modalBody').innerHTML = '<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Admin Profile</h3><div class="space-y-3"><p class="text-gray-700 dark:text-gray-300"><strong>Name:</strong> Admin User</p><p class="text-gray-700 dark:text-gray-300"><strong>Email:</strong> admin@hydrofeed.com</p><p class="text-gray-700 dark:text-gray-300"><strong>Role:</strong> <span class="text-primary">Super Administrator</span></p><p class="text-gray-700 dark:text-gray-300"><strong>Joined:</strong> January 2024</p></div>';
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    
+    function showNotificationModal() {
+        document.getElementById('modalBody').innerHTML = '<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Notifications</h3><div class="space-y-3"><div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"><p class="text-gray-700 dark:text-gray-300"><i class="fas fa-truck text-primary mr-2"></i> New feed order from Sunrise Ranch</p><span class="text-xs text-gray-500">2 hours ago</span></div><div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"><p class="text-gray-700 dark:text-gray-300"><i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i> Low tray inventory alert</p><span class="text-xs text-gray-500">5 hours ago</span></div><div class="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"><p class="text-gray-700 dark:text-gray-300"><i class="fas fa-user-plus text-primary mr-2"></i> New farmer registration pending</p><span class="text-xs text-gray-500">1 day ago</span></div></div>';
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    
+    function showSecurityModal() {
+        document.getElementById('modalBody').innerHTML = '<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Security Settings</h3><div class="space-y-3"><div class="flex justify-between items-center flex-wrap gap-2"><span class="text-gray-700 dark:text-gray-300">Two-Factor Authentication</span><button class="bg-primary text-white px-3 py-1 rounded-lg text-sm">Enable</button></div><div class="flex justify-between items-center mt-2 flex-wrap gap-2"><span class="text-gray-700 dark:text-gray-300">Last Login</span><span class="text-gray-600 dark:text-gray-400">Today, 09:32 AM</span></div><div class="flex justify-between items-center mt-2 flex-wrap gap-2"><span class="text-gray-700 dark:text-gray-300">IP Address</span><span class="text-gray-600 dark:text-gray-400">192.168.1.1</span></div><button class="w-full mt-4 border border-red-500 text-red-500 py-2 rounded-lg hover:bg-red-500 hover:text-white transition">Change Password</button></div>';
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    
+    function closeModal(e) {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+    
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('dark');
+    }
+    
+    refreshCharts();
+    
+    document.addEventListener('click', function(e) {
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = e.target.closest('.mobile-menu-btn');
+        if (window.innerWidth <= 1024 && sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuBtn) {
+            sidebar.classList.remove('mobile-open');
+        }
+    });
+</script>
+</body>
+</html>
