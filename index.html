@@ -56,7 +56,7 @@
             overflow: hidden;
         }
         
-        /* ===== NAVBAR ===== */
+        /* ===== NAVBAR (Same as original) ===== */
         .navbar {
             position: fixed;
             top: 0;
@@ -571,8 +571,8 @@
         }
         
         @media (max-width: 1000px) {
-            .ticker-section { top: 65px; }
-            .main-content { padding-top: 65px; }
+            .ticker-section { top: 50px; }
+            .main-content { padding-top: 50px; }
         }
         
         /* Hero Section Background */
@@ -588,132 +588,78 @@
             background-blend-mode: overlay;
         }
         
-        /* ===== FARMER FEEDING COW IMAGE SECTION ===== */
+        /* Hero Image Container Styles */
         .hero-image-container {
-    position: relative;
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
-    overflow: hidden;
-    aspect-ratio: 4 / 3;
-
-    /* Modern Shape */
-    border-radius: 40px 120px 40px 120px;
-
-    border: 4px solid rgba(255,255,255,0.8);
-
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-
-    box-shadow:
-        0 25px 45px rgba(0,0,0,0.25),
-        0 0 0 12px rgba(255,255,255,0.05);
-
-    transition: all 0.5s ease;
-
-    /* Straight Position */
-    transform: rotate(0deg);
-
-    /* Floating Animation */
-    animation: floatImage 5s ease-in-out infinite;
-}
-
-/* Glow Effect */
-.hero-image-container::before {
-    content: "";
-    position: absolute;
-    inset: -20%;
-    background: linear-gradient(
-        135deg,
-        rgba(76, 175, 80, 0.25),
-        rgba(139, 195, 74, 0.08),
-        transparent
-    );
-    z-index: 1;
-    animation: rotateGlow 10s linear infinite;
-}
-
-/* Shine Effect */
-.hero-image-container::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 60%;
-    height: 100%;
-    background: rgba(255,255,255,0.18);
-    transform: skewX(-25deg);
-    animation: shine 5s infinite;
-    z-index: 2;
-}
-
-.hero-image-container:hover {
-    transform: translateY(-10px) scale(1.03);
-
-    box-shadow:
-        0 35px 60px rgba(0,0,0,0.32),
-        0 0 35px rgba(76,175,80,0.35);
-}
-
-.hero-image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: relative;
-    z-index: 0;
-    transition: transform 0.5s ease;
-}
-
-.hero-image-container:hover img {
-    transform: scale(1.06);
-}
-
-/* Floating Animation */
-@keyframes floatImage {
-    0% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-12px);
-    }
-    100% {
-        transform: translateY(0px);
-    }
-}
-
-/* Glow Rotation */
-@keyframes rotateGlow {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Shine Animation */
-@keyframes shine {
-    0% {
-        left: -120%;
-    }
-    100% {
-        left: 140%;
-    }
-}
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+            border-radius: 40px 120px 40px 120px;
+            border: 4px solid rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.25), 0 0 0 12px rgba(255,255,255,0.05);
+            transition: all 0.5s ease;
+            transform: rotate(0deg);
+            animation: floatImage 5s ease-in-out infinite;
+        }
+        
+        .hero-image-container::before {
+            content: "";
+            position: absolute;
+            inset: -20%;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(139, 195, 74, 0.08), transparent);
+            z-index: 1;
+            animation: rotateGlow 10s linear infinite;
+        }
+        
+        .hero-image-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 60%;
+            height: 100%;
+            background: rgba(255,255,255,0.18);
+            transform: skewX(-25deg);
+            animation: shine 5s infinite;
+            z-index: 2;
+        }
         
         .hero-image-container:hover {
-            transform: scale(1.02);
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 35px 60px rgba(0,0,0,0.32), 0 0 35px rgba(76,175,80,0.35);
         }
         
         .hero-image-container img {
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 0;
             transition: transform 0.5s ease;
         }
         
         .hero-image-container:hover img {
-            transform: scale(1.05);
+            transform: scale(1.06);
+        }
+        
+        @keyframes floatImage {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes shine {
+            0% { left: -120%; }
+            100% { left: 140%; }
         }
         
         .image-caption {
@@ -724,6 +670,7 @@
             background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
             padding: 20px;
             text-align: center;
+            z-index: 5;
         }
         
         .image-caption span {
@@ -736,7 +683,16 @@
             display: inline-block;
         }
         
-        /* Enhanced Card Hover Effects */
+        /* Product Card Styles */
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .product-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 50px -20px rgba(43, 147, 72, 0.4);
+        }
+        
+        /* Service Card Styles */
         .service-card, .process-step, .plan-card, .testimonial-card {
             transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
@@ -750,15 +706,6 @@
             transform: translateY(-8px);
             background: rgba(43, 147, 72, 0.05);
             border-radius: 30px;
-        }
-        
-        .service-card:hover i, .plan-card:hover i, .process-step:hover i {
-            animation: bounce 0.5s ease;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
         }
         
         /* CTA Section */
@@ -840,6 +787,29 @@
         
         footer .logo i {
             color: #2B9348;
+        }
+        
+        /* Footer Social Icons - Fixed for Dark Mode */
+        .social-icon {
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            background: #f3f4f6;
+            color: #4B5563;
+        }
+        
+        .dark .social-icon {
+            background: #1E293B;
+            color: #94A3B8;
+        }
+        
+        .social-icon:hover {
+            background: #2B9348 !important;
+            color: white !important;
         }
         
         /* Dark theme text fixes */
@@ -1016,6 +986,51 @@
             </div>
         </section>
 
+        <!-- NEW FEATURED PRODUCTS SECTION -->
+        <section class="py-20 bg-gray-50 dark:bg-gray-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Featured Products</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Our Best Selling Systems</h2>
+                    <p class="text-gray-600 dark:text-gray-300 mt-4">Premium hydroponic solutions trusted by farmers worldwide</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Product 1 -->
+                    <div class="product-card bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+                        <div class="h-48 overflow-hidden"><img src="https://images.unsplash.com/photo-1592417817098-8fd3f4d2f2a8?w=400&h=250&fit=crop" alt="HydroTray Pro" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"></div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start"><div><h3 class="text-xl font-bold text-gray-900 dark:text-white">HydroTray Pro 10</h3><p class="text-sm text-gray-500 dark:text-gray-400 mt-1">10-tray modular system</p></div><div class="bg-primary/10 px-2 py-1 rounded-lg"><span class="text-xs font-bold text-primary">Bestseller</span></div></div>
+                            <div class="mt-3 flex items-center gap-3 text-sm"><i class="fas fa-tint text-primary"></i><span class="text-gray-600 dark:text-gray-300">70% less water</span><i class="fas fa-chart-line text-primary ml-2"></i><span class="text-gray-600 dark:text-gray-300">80kg/day</span></div>
+                            <div class="mt-4 flex justify-between items-center"><span class="text-2xl font-black text-primary">$3,290</span><a href="#" class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-secondary transition">Shop Now</a></div>
+                        </div>
+                    </div>
+                    <!-- Product 2 -->
+                    <div class="product-card bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 relative">
+                        <div class="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full z-10">Best Seller</div>
+                        <div class="h-48 overflow-hidden"><img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=400&h=250&fit=crop" alt="HydroStack Max" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"></div>
+                        <div class="p-5"><h3 class="text-xl font-bold text-gray-900 dark:text-white">HydroStack Max 24</h3><p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Vertical rack system</p>
+                        <div class="mt-3 flex items-center gap-3 text-sm"><i class="fas fa-wifi text-primary"></i><span class="text-gray-600 dark:text-gray-300">IoT Ready</span><i class="fas fa-microchip text-primary ml-2"></i><span class="text-gray-600 dark:text-gray-300">Smart Alerts</span></div>
+                        <div class="mt-4 flex justify-between items-center"><span class="text-2xl font-black text-primary">$8,990</span><a href="#" class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-secondary transition">Shop Now</a></div></div>
+                    </div>
+                    <!-- Product 3 -->
+                    <div class="product-card bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+                        <div class="h-48 overflow-hidden"><img src="https://images.pexels.com/photos/1171684/pexels-photo-1171684.jpeg?w=400&h=250&fit=crop" alt="AgriTower Elite" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"></div>
+                        <div class="p-5"><h3 class="text-xl font-bold text-gray-900 dark:text-white">AgriTower Elite</h3><p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Container farm system</p>
+                        <div class="mt-3 flex items-center gap-3 text-sm"><i class="fas fa-brain text-primary"></i><span class="text-gray-600 dark:text-gray-300">AI Optimized</span><i class="fas fa-cloud-sun text-primary ml-2"></i><span class="text-gray-600 dark:text-gray-300">Climate Control</span></div>
+                        <div class="mt-4 flex justify-between items-center"><span class="text-2xl font-black text-primary">$24,500</span><a href="#" class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-secondary transition">Shop Now</a></div></div>
+                    </div>
+                    <!-- Product 4 -->
+                    <div class="product-card bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+                        <div class="h-48 overflow-hidden"><img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=250&fit=crop" alt="FeedManager Pro" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"></div>
+                        <div class="p-5"><h3 class="text-xl font-bold text-gray-900 dark:text-white">FeedManager Pro</h3><p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Smart Dashboard</p>
+                        <div class="mt-3 flex items-center gap-3 text-sm"><i class="fas fa-chalkboard-user text-primary"></i><span class="text-gray-600 dark:text-gray-300">Full Analytics</span><i class="fas fa-mobile-alt text-primary ml-2"></i><span class="text-gray-600 dark:text-gray-300">Mobile App</span></div>
+                        <div class="mt-4 flex justify-between items-center"><span class="text-2xl font-black text-primary">$99</span><span class="text-sm text-gray-500">/mo</span><a href="#" class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-secondary transition">Subscribe</a></div></div>
+                    </div>
+                </div>
+                <div class="text-center mt-10"><a href="products.html" class="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all group">View All Products <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i></a></div>
+            </div>
+        </section>
+
         <!-- Our Services Section -->
         <section class="py-20 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1058,21 +1073,9 @@
                     <p class="text-gray-600 dark:text-gray-300 mt-4">Start growing fresh fodder in three easy steps</p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="process-step text-center p-6">
-                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl font-black text-primary">1</span></div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Choose Your Plan</h3>
-                        <p class="text-gray-600 dark:text-gray-300">Select the plan that fits your herd size and farm needs.</p>
-                    </div>
-                    <div class="process-step text-center p-6">
-                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl font-black text-primary">2</span></div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Set Up Dashboard</h3>
-                        <p class="text-gray-600 dark:text-gray-300">Configure recurring deliveries, track inventory & schedules.</p>
-                    </div>
-                    <div class="process-step text-center p-6">
-                        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl font-black text-primary">3</span></div>
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Harvest & Save</h3>
-                        <p class="text-gray-600 dark:text-gray-300">Get fresh fodder delivered and watch your savings grow.</p>
-                    </div>
+                    <div class="process-step text-center p-6"><div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl font-black text-primary">1</span></div><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Choose Your Plan</h3><p class="text-gray-600 dark:text-gray-300">Select the plan that fits your herd size and farm needs.</p></div>
+                    <div class="process-step text-center p-6"><div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl font-black text-primary">2</span></div><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Set Up Dashboard</h3><p class="text-gray-600 dark:text-gray-300">Configure recurring deliveries, track inventory & schedules.</p></div>
+                    <div class="process-step text-center p-6"><div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-3xl font-black text-primary">3</span></div><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Harvest & Save</h3><p class="text-gray-600 dark:text-gray-300">Get fresh fodder delivered and watch your savings grow.</p></div>
                 </div>
             </div>
         </section>
@@ -1081,20 +1084,8 @@
         <section class="py-20 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="order-2 lg:order-1">
-                        <span class="text-primary font-semibold text-sm uppercase tracking-wider">Farm Success</span>
-                        <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2 mb-4">Transforming Livestock Farming</h2>
-                        <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">Our clients report significant improvements in milk production, reduced feed costs, and healthier livestock. With our smart dashboard, farmers can track every tray from germination to harvest.</p>
-                        <div class="flex flex-wrap gap-6 mb-6">
-                            <div class="flex items-center gap-3"><i class="fas fa-check-circle text-primary text-xl"></i><div><p class="font-bold text-gray-900 dark:text-white">40%</p><p class="text-sm text-gray-500 dark:text-gray-400">Higher Milk Yield</p></div></div>
-                            <div class="flex items-center gap-3"><i class="fas fa-tint text-primary text-xl"></i><div><p class="font-bold text-gray-900 dark:text-white">70%</p><p class="text-sm text-gray-500 dark:text-gray-400">Less Water Usage</p></div></div>
-                            <div class="flex items-center gap-3"><i class="fas fa-dollar-sign text-primary text-xl"></i><div><p class="font-bold text-gray-900 dark:text-white">35%</p><p class="text-sm text-gray-500 dark:text-gray-400">Cost Reduction</p></div></div>
-                        </div>
-                        <a href="#" class="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all group">View Success Stories <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i></a>
-                    </div>
-                    <div class="order-1 lg:order-2 relative">
-                        <div class="relative rounded-2xl overflow-hidden shadow-xl"><img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?w=600&h=450&fit=crop" alt="Happy Farmer" class="w-full rounded-2xl"><div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div></div>
-                    </div>
+                    <div class="order-2 lg:order-1"><span class="text-primary font-semibold text-sm uppercase tracking-wider">Farm Success</span><h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2 mb-4">Transforming Livestock Farming</h2><p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">Our clients report significant improvements in milk production, reduced feed costs, and healthier livestock. With our smart dashboard, farmers can track every tray from germination to harvest.</p><div class="flex flex-wrap gap-6 mb-6"><div class="flex items-center gap-3"><i class="fas fa-check-circle text-primary text-xl"></i><div><p class="font-bold text-gray-900 dark:text-white">40%</p><p class="text-sm text-gray-500 dark:text-gray-400">Higher Milk Yield</p></div></div><div class="flex items-center gap-3"><i class="fas fa-tint text-primary text-xl"></i><div><p class="font-bold text-gray-900 dark:text-white">70%</p><p class="text-sm text-gray-500 dark:text-gray-400">Less Water Usage</p></div></div><div class="flex items-center gap-3"><i class="fas fa-dollar-sign text-primary text-xl"></i><div><p class="font-bold text-gray-900 dark:text-white">35%</p><p class="text-sm text-gray-500 dark:text-gray-400">Cost Reduction</p></div></div></div><a href="#" class="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all group">View Success Stories <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i></a></div>
+                    <div class="order-1 lg:order-2 relative"><div class="relative rounded-2xl overflow-hidden shadow-xl"><img src="https://images.unsplash.com/photo-1589923188900-85dae523342b?w=600&h=450&fit=crop" alt="Happy Farmer" class="w-full rounded-2xl"><div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div></div></div>
                 </div>
             </div>
         </section>
@@ -1102,52 +1093,11 @@
         <!-- Flexible Plans Section -->
         <section class="py-20 bg-gray-50 dark:bg-gray-800">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Pricing</span>
-                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Flexible Plans for Every Herd</h2>
-                    <p class="text-gray-600 dark:text-gray-300 mt-4">Choose the perfect plan for your farm's needs</p>
-                </div>
+                <div class="text-center max-w-3xl mx-auto mb-16"><span class="text-primary font-semibold text-sm uppercase tracking-wider">Pricing</span><h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Flexible Plans for Every Herd</h2><p class="text-gray-600 dark:text-gray-300 mt-4">Choose the perfect plan for your farm's needs</p></div>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="plan-card bg-white dark:bg-gray-900 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-                        <i class="fas fa-chicken text-4xl text-primary mb-4"></i>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Starter</h3>
-                        <p class="text-gray-500 dark:text-gray-400 mb-4">Perfect for small farms</p>
-                        <p class="text-4xl font-black text-primary mb-6">$149<span class="text-base font-normal">/mo</span></p>
-                        <ul class="text-left space-y-2 mb-6 text-gray-600 dark:text-gray-300">
-                            <li><i class="fas fa-check text-primary mr-2"></i> 100 trays/month</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> Basic dashboard</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> Feeding schedules</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> Email support</li>
-                        </ul>
-                        <a href="#" class="block bg-primary text-white py-3 rounded-xl font-semibold hover:bg-secondary transition">Choose Plan</a>
-                    </div>
-                    <div class="plan-card bg-white dark:bg-gray-900 rounded-2xl p-8 text-center border-2 border-primary shadow-xl transition-all duration-300 transform scale-105 relative">
-                        <div class="absolute top-0 right-0 bg-primary text-white px-3 py-1 rounded-tr-2xl rounded-bl-2xl text-sm font-bold">Popular</div>
-                        <i class="fas fa-cow text-4xl text-primary mb-4"></i>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Farm Pro</h3>
-                        <p class="text-gray-500 dark:text-gray-400 mb-4">Best for medium-large farms</p>
-                        <p class="text-4xl font-black text-primary mb-6">$549<span class="text-base font-normal">/mo</span></p>
-                        <ul class="text-left space-y-2 mb-6 text-gray-600 dark:text-gray-300">
-                            <li><i class="fas fa-check text-primary mr-2"></i> 500 trays/month</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> Advanced analytics</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> Auto-reorder system</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> Priority support</li>
-                        </ul>
-                        <a href="#" class="block bg-primary text-white py-3 rounded-xl font-semibold hover:bg-secondary transition">Choose Plan</a>
-                    </div>
-                    <div class="plan-card bg-white dark:bg-gray-900 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-                        <i class="fas fa-building text-4xl text-primary mb-4"></i>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Enterprise</h3>
-                        <p class="text-gray-500 dark:text-gray-400 mb-4">For large operations</p>
-                        <p class="text-4xl font-black text-primary mb-6">Custom</p>
-                        <ul class="text-left space-y-2 mb-6 text-gray-600 dark:text-gray-300">
-                            <li><i class="fas fa-check text-primary mr-2"></i> Unlimited trays</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> API access</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> Dedicated farm manager</li>
-                            <li><i class="fas fa-check text-primary mr-2"></i> 24/7 phone support</li>
-                        </ul>
-                        <a href="#" class="block bg-primary text-white py-3 rounded-xl font-semibold hover:bg-secondary transition">Contact Us</a>
-                    </div>
+                    <div class="plan-card bg-white dark:bg-gray-900 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700"><i class="fas fa-chicken text-4xl text-primary mb-4"></i><h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Starter</h3><p class="text-gray-500 dark:text-gray-400 mb-4">Perfect for small farms</p><p class="text-4xl font-black text-primary mb-6">$149<span class="text-base font-normal">/mo</span></p><ul class="text-left space-y-2 mb-6 text-gray-600 dark:text-gray-300"><li><i class="fas fa-check text-primary mr-2"></i> 100 trays/month</li><li><i class="fas fa-check text-primary mr-2"></i> Basic dashboard</li><li><i class="fas fa-check text-primary mr-2"></i> Feeding schedules</li><li><i class="fas fa-check text-primary mr-2"></i> Email support</li></ul><a href="#" class="block bg-primary text-white py-3 rounded-xl font-semibold hover:bg-secondary transition">Choose Plan</a></div>
+                    <div class="plan-card bg-white dark:bg-gray-900 rounded-2xl p-8 text-center border-2 border-primary shadow-xl transform scale-105 relative"><div class="absolute top-0 right-0 bg-primary text-white px-3 py-1 rounded-tr-2xl rounded-bl-2xl text-sm font-bold">Popular</div><i class="fas fa-cow text-4xl text-primary mb-4"></i><h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Farm Pro</h3><p class="text-gray-500 dark:text-gray-400 mb-4">Best for medium-large farms</p><p class="text-4xl font-black text-primary mb-6">$549<span class="text-base font-normal">/mo</span></p><ul class="text-left space-y-2 mb-6 text-gray-600 dark:text-gray-300"><li><i class="fas fa-check text-primary mr-2"></i> 500 trays/month</li><li><i class="fas fa-check text-primary mr-2"></i> Advanced analytics</li><li><i class="fas fa-check text-primary mr-2"></i> Auto-reorder system</li><li><i class="fas fa-check text-primary mr-2"></i> Priority support</li></ul><a href="#" class="block bg-primary text-white py-3 rounded-xl font-semibold hover:bg-secondary transition">Choose Plan</a></div>
+                    <div class="plan-card bg-white dark:bg-gray-900 rounded-2xl p-8 text-center border border-gray-200 dark:border-gray-700"><i class="fas fa-building text-4xl text-primary mb-4"></i><h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Enterprise</h3><p class="text-gray-500 dark:text-gray-400 mb-4">For large operations</p><p class="text-4xl font-black text-primary mb-6">Custom</p><ul class="text-left space-y-2 mb-6 text-gray-600 dark:text-gray-300"><li><i class="fas fa-check text-primary mr-2"></i> Unlimited trays</li><li><i class="fas fa-check text-primary mr-2"></i> API access</li><li><i class="fas fa-check text-primary mr-2"></i> Dedicated farm manager</li><li><i class="fas fa-check text-primary mr-2"></i> 24/7 phone support</li></ul><a href="#" class="block bg-primary text-white py-3 rounded-xl font-semibold hover:bg-secondary transition">Contact Us</a></div>
                 </div>
             </div>
         </section>
@@ -1155,29 +1105,11 @@
         <!-- Testimonials Section -->
         <section class="py-20 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
-                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Testimonials</span>
-                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">What Farmers Say</h2>
-                </div>
+                <div class="text-center mb-12"><span class="text-primary font-semibold text-sm uppercase tracking-wider">Testimonials</span><h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">What Farmers Say</h2></div>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="testimonial-card bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
-                        <div class="flex text-primary mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="mb-6 text-gray-700 dark:text-gray-300">"HydroFeed increased our milk production by 32% in just 3 months. The dashboard makes tracking so easy!"</p>
-                        <div class="font-bold text-gray-900 dark:text-white">Sarah Chen</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">Dairy Farm Owner</div>
-                    </div>
-                    <div class="testimonial-card bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
-                        <div class="flex text-primary mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="mb-6 text-gray-700 dark:text-gray-300">"The recurring delivery system saved us hours of manual ordering. Best investment for our ranch."</p>
-                        <div class="font-bold text-gray-900 dark:text-white">Mike Thompson</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">Ranch Manager</div>
-                    </div>
-                    <div class="testimonial-card bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
-                        <div class="flex text-primary mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p class="mb-6 text-gray-700 dark:text-gray-300">"Reduced water usage by 70% and the animals love the fresh fodder. Highly recommend!"</p>
-                        <div class="font-bold text-gray-900 dark:text-white">Green Pastures Co.</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">Sustainable Farm</div>
-                    </div>
+                    <div class="testimonial-card bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700"><div class="flex text-primary mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="mb-6 text-gray-700 dark:text-gray-300">"HydroFeed increased our milk production by 32% in just 3 months. The dashboard makes tracking so easy!"</p><div class="font-bold text-gray-900 dark:text-white">Sarah Chen</div><div class="text-sm text-gray-500 dark:text-gray-400">Dairy Farm Owner</div></div>
+                    <div class="testimonial-card bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700"><div class="flex text-primary mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="mb-6 text-gray-700 dark:text-gray-300">"The recurring delivery system saved us hours of manual ordering. Best investment for our ranch."</p><div class="font-bold text-gray-900 dark:text-white">Mike Thompson</div><div class="text-sm text-gray-500 dark:text-gray-400">Ranch Manager</div></div>
+                    <div class="testimonial-card bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700"><div class="flex text-primary mb-4"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="mb-6 text-gray-700 dark:text-gray-300">"Reduced water usage by 70% and the animals love the fresh fodder. Highly recommend!"</p><div class="font-bold text-gray-900 dark:text-white">Green Pastures Co.</div><div class="text-sm text-gray-500 dark:text-gray-400">Sustainable Farm</div></div>
                 </div>
             </div>
         </section>
@@ -1186,27 +1118,8 @@
         <section class="cta-enhanced py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <div class="text-center lg:text-left">
-                        <div class="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 border border-primary/30"><i class="fas fa-rocket"></i><span>Limited Time Offer</span></div>
-                        <h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">Ready to Transform <span class="text-primary">Your Farm?</span></h2>
-                        <p class="text-lg text-gray-200 mb-6 max-w-lg mx-auto lg:mx-0">Join 500+ farms already using HydroFeed for sustainable, profitable livestock feeding.</p>
-                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
-                            <a href="#" class="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-secondary transition shadow-lg hover:shadow-xl inline-flex items-center gap-2 group"><i class="fas fa-seedling"></i> Start Your Farm <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i></a>
-                            <a href="#" class="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-bold hover:bg-white/30 transition inline-flex items-center gap-2"><i class="fas fa-calendar-alt"></i> Schedule Demo</a>
-                        </div>
-                        <div class="flex flex-wrap gap-6 mt-8 justify-center lg:justify-start">
-                            <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-200">Free Consultation</span></div>
-                            <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-200">Dashboard Access</span></div>
-                            <div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-200">Nutritional Support</span></div>
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <div class="cta-card bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                            <div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-primary/30 rounded-full flex items-center justify-center"><i class="fas fa-chart-line text-primary text-xl"></i></div><div><p class="text-white text-sm">Average ROI</p><p class="text-2xl font-bold text-white">3-6 <span class="text-sm">Months</span></p></div></div>
-                            <div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-primary/30 rounded-full flex items-center justify-center"><i class="fas fa-tractor text-primary text-xl"></i></div><div><p class="text-white text-sm">Happy Farmers</p><p class="text-2xl font-bold text-white">500+</p></div></div>
-                            <div class="flex items-center gap-3"><div class="w-12 h-12 bg-primary/30 rounded-full flex items-center justify-center"><i class="fas fa-leaf text-primary text-xl"></i></div><div><p class="text-white text-sm">Trays Delivered</p><p class="text-2xl font-bold text-white">50K+</p></div></div>
-                        </div>
-                    </div>
+                    <div class="text-center lg:text-left"><div class="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 border border-primary/30"><i class="fas fa-rocket"></i><span>Limited Time Offer</span></div><h2 class="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">Ready to Transform <span class="text-primary">Your Farm?</span></h2><p class="text-lg text-gray-200 mb-6 max-w-lg mx-auto lg:mx-0">Join 500+ farms already using HydroFeed for sustainable, profitable livestock feeding.</p><div class="flex flex-wrap gap-4 justify-center lg:justify-start"><a href="#" class="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-secondary transition shadow-lg hover:shadow-xl inline-flex items-center gap-2 group"><i class="fas fa-seedling"></i> Start Your Farm <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i></a><a href="#" class="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-bold hover:bg-white/30 transition inline-flex items-center gap-2"><i class="fas fa-calendar-alt"></i> Schedule Demo</a></div><div class="flex flex-wrap gap-6 mt-8 justify-center lg:justify-start"><div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-200">Free Consultation</span></div><div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-200">Dashboard Access</span></div><div class="flex items-center gap-2"><i class="fas fa-check-circle text-primary text-sm"></i><span class="text-sm text-gray-200">Nutritional Support</span></div></div></div>
+                    <div class="relative"><div class="cta-card bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"><div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-primary/30 rounded-full flex items-center justify-center"><i class="fas fa-chart-line text-primary text-xl"></i></div><div><p class="text-white text-sm">Average ROI</p><p class="text-2xl font-bold text-white">3-6 <span class="text-sm">Months</span></p></div></div><div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-primary/30 rounded-full flex items-center justify-center"><i class="fas fa-tractor text-primary text-xl"></i></div><div><p class="text-white text-sm">Happy Farmers</p><p class="text-2xl font-bold text-white">500+</p></div></div><div class="flex items-center gap-3"><div class="w-12 h-12 bg-primary/30 rounded-full flex items-center justify-center"><i class="fas fa-leaf text-primary text-xl"></i></div><div><p class="text-white text-sm">Trays Delivered</p><p class="text-2xl font-bold text-white">50K+</p></div></div></div></div>
                 </div>
             </div>
         </section>
@@ -1215,7 +1128,7 @@
     <!-- Green Line Before Footer -->
     <div class="green-line"></div>
 
-    <!-- Footer -->
+    <!-- Footer with Fixed Social Icons -->
     <footer class="bg-white dark:bg-gray-900 pt-12 pb-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:grid md:grid-cols-4 gap-8 mb-10">
@@ -1226,9 +1139,9 @@
                     </a>
                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p>
                     <div class="flex gap-3">
-                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-twitter text-xs"></i></a>
-                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-instagram text-xs"></i></a>
-                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-linkedin-in text-xs"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter text-xs"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram text-xs"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in text-xs"></i></a>
                     </div>
                 </div>
                 <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">Home</a></li><li><a href="#" class="hover:text-primary transition">About Us</a></li><li><a href="#" class="hover:text-primary transition">Products</a></li><li><a href="#" class="hover:text-primary transition">Plans</a></li><li><a href="#" class="hover:text-primary transition">Contact</a></li></ul></div>
