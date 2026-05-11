@@ -601,6 +601,28 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .social-icon {
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            background: #f3f4f6;
+            color: #4B5563;
+        }
+        
+        .dark .social-icon {
+            background: #1E293B;
+            color: #94A3B8;
+        }
+        
+        .social-icon:hover {
+            background: #2B9348 !important;
+            color: white !important;
+        }
         
         .dark footer .logo-text {
             background: linear-gradient(135deg, #4ADE80, #2B9348);
@@ -608,14 +630,62 @@
             -webkit-text-fill-color: transparent;
         }
         
-        .dark .text-gray-900 { color: #F1F5F9 !important; }
-        .dark .text-gray-800 { color: #E2E8F0 !important; }
-        .dark .text-gray-700 { color: #CBD5E1 !important; }
-        .dark .text-gray-600 { color: #94A3B8 !important; }
+        /* ENHANCED DARK MODE TEXT FIXES - No black text anywhere */
+        .dark .text-gray-900 { color: #F8FAFC !important; }
+        .dark .text-gray-800 { color: #F1F5F9 !important; }
+        .dark .text-gray-700 { color: #E2E8F0 !important; }
+        .dark .text-gray-600 { color: #CBD5E1 !important; }
+        .dark .text-gray-500 { color: #94A3B8 !important; }
+        .dark .text-gray-400 { color: #A0AEC0 !important; }
         .dark .bg-gray-50 { background-color: #1E293B !important; }
         .dark .bg-white { background-color: #0F172A !important; }
         .dark .border-gray-200 { border-color: #334155 !important; }
-        .dark .bg-gray-100 { background-color: #1E293B !important; }
+        .dark .bg-gray-100 { background-color: #1E293B !important; color: #E2E8F0 !important; }
+        
+        /* Fix for service card text in dark mode */
+        .dark .service-card p,
+        .dark .service-card .text-gray-600,
+        .dark .service-card .text-gray-700 {
+            color: #CBD5E1 !important;
+        }
+        
+        .dark .service-card .bg-gray-100,
+        .dark .service-card .dark\:bg-gray-800 {
+            background-color: #334155 !important;
+            color: #F1F5F9 !important;
+        }
+        
+        .dark .process-step .text-gray-500,
+        .dark .process-step p {
+            color: #94A3B8 !important;
+        }
+        
+        .dark .process-step h3 {
+            color: #FFFFFF !important;
+        }
+        
+        /* Fix testimonial text */
+        .dark .text-gray-700 {
+            color: #E2E8F0 !important;
+        }
+        
+        .dark .testimonial-text {
+            color: #F1F5F9 !important;
+        }
+        
+        /* ensure all headings stay bright */
+        .dark h1, .dark h2, .dark h3, .dark h4, .dark .font-bold, .dark .font-black {
+            color: #FFFFFF !important;
+        }
+        
+        /* Fix for plan cards text */
+        .dark .text-gray-500, .dark .text-gray-600, .dark .text-gray-700 {
+            color: #CBD5E1 !important;
+        }
+        
+        .dark ul li, .dark .space-y-2 li {
+            color: #CBD5E1 !important;
+        }
     </style>
 </head>
 <body class="light font-inter">
@@ -723,7 +793,7 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT - SERVICES PAGE WITH IMAGES -->
+    <!-- MAIN CONTENT - SERVICES PAGE (images preserve original paths) -->
     <main class="main-content">
         <!-- Hero Section -->
         <section class="about-hero py-20">
@@ -741,7 +811,7 @@
             </div>
         </section>
 
-        <!-- Services Grid with Images -->
+        <!-- Services Grid with Images (original paths unchanged) -->
         <section class="py-20 bg-white dark:bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center max-w-2xl mx-auto mb-16">
@@ -753,61 +823,61 @@
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Service 1 - System Design -->
                     <div class="service-card">
-                        <div class="image-container"><img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=500&h=250&fit=crop" alt="System Design & Consultation" class="service-image"></div>
+                        <div class="image-container"><img src="images/a1.jpg" alt="System Design & Consultation" class="service-image"></div>
                         <div class="p-6 flex-grow">
                             <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-drafting-compass text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">System Design & Consultation</h3></div>
                             <p class="text-gray-600 dark:text-gray-300">Custom hydroponic system layout optimized for your barn space, livestock count, and climate conditions.</p>
-                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Site assessment</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">3D modeling</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">ROI projection</span></div>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Site assessment</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">3D modeling</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">ROI projection</span></div>
                         </div>
                     </div>
                     
                     <!-- Service 2 - Dashboard Integration -->
                     <div class="service-card">
-                        <div class="image-container"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=250&fit=crop" alt="Dashboard Setup & Integration" class="service-image"></div>
+                        <div class="image-container"><img src="images/a2.jpg" alt="Dashboard Setup & Integration" class="service-image"></div>
                         <div class="p-6 flex-grow">
                             <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-microchip text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Dashboard Setup & Integration</h3></div>
                             <p class="text-gray-600 dark:text-gray-300">Full deployment of FeedManager dashboard for recurring deliveries, tray inventory tracking, and feeding schedules.</p>
-                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Custom workflows</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">API integration</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Team training</span></div>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Custom workflows</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">API integration</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Team training</span></div>
                         </div>
                     </div>
                     
                     <!-- Service 3 - Installation -->
                     <div class="service-card">
-                        <div class="image-container"><img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=500&h=250&fit=crop" alt="Installation & Commissioning" class="service-image"></div>
+                        <div class="image-container"><img src="images/a3.jpg" alt="Installation & Commissioning" class="service-image"></div>
                         <div class="p-6 flex-grow">
                             <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-tools text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Installation & Commissioning</h3></div>
                             <p class="text-gray-600 dark:text-gray-300">Professional on-site installation, calibration, and testing of all hydroponic equipment and sensors.</p>
-                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">White-glove service</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Quality assurance</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Warranty activation</span></div>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">White-glove service</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Quality assurance</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Warranty activation</span></div>
                         </div>
                     </div>
                     
                     <!-- Service 4 - Farmer Training -->
                     <div class="service-card">
-                        <div class="image-container"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&h=250&fit=crop" alt="Farmer Training & Onboarding" class="service-image"></div>
+                        <div class="image-container"><img src="images/a4.jpg" alt="Farmer Training & Onboarding" class="service-image"></div>
                         <div class="p-6 flex-grow">
                             <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-chalkboard-user text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Farmer Training & Onboarding</h3></div>
                             <p class="text-gray-600 dark:text-gray-300">Comprehensive training for you and your staff on system operation, maintenance, and dashboard management.</p>
-                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Hands-on workshops</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Video library</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">24/7 support portal</span></div>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Hands-on workshops</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Video library</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">24/7 support portal</span></div>
                         </div>
                     </div>
                     
                     <!-- Service 5 - Nutritional Analysis -->
                     <div class="service-card">
-                        <div class="image-container"><img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?w=500&h=250&fit=crop" alt="Nutritional Analysis" class="service-image"></div>
+                        <div class="image-container"><img src="images/a5.jpg" alt="Nutritional Analysis" class="service-image"></div>
                         <div class="p-6 flex-grow">
                             <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-chart-line text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Nutritional Analysis & Optimization</h3></div>
                             <p class="text-gray-600 dark:text-gray-300">Lab-tested feed analysis, custom seed blends, and feeding schedule optimization for maximum livestock health.</p>
-                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Protein profiling</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Digestibility tests</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Custom blends</span></div>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Protein profiling</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Digestibility tests</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Custom blends</span></div>
                         </div>
                     </div>
                     
                     <!-- Service 6 - Technical Support -->
                     <div class="service-card">
-                        <div class="image-container"><img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=250&fit=crop" alt="24/7 Technical Support" class="service-image"></div>
+                        <div class="image-container"><img src="images/h1.jpg" alt="24/7 Technical Support" class="service-image"></div>
                         <div class="p-6 flex-grow">
                             <div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fas fa-headset text-primary text-xl"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">24/7 Technical Support & Maintenance</h3></div>
                             <p class="text-gray-600 dark:text-gray-300">Ongoing remote monitoring, preventive maintenance, and emergency support to keep your system running smoothly.</p>
-                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Remote diagnostics</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Scheduled maintenance</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">Emergency dispatch</span></div>
+                            <div class="mt-4 flex flex-wrap gap-2"><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Remote diagnostics</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Scheduled maintenance</span><span class="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full text-gray-700 dark:text-gray-200">Emergency dispatch</span></div>
                         </div>
                     </div>
                 </div>
@@ -823,10 +893,10 @@
                     <p class="text-gray-600 dark:text-gray-300 mt-4">From first contact to full operation — we're with you every step</p>
                 </div>
                 <div class="grid md:grid-cols-4 gap-6">
-                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">1</span></div><h3 class="font-bold text-lg">Consultation</h3><p class="text-sm text-gray-500 dark:text-gray-400">Free farm assessment & needs analysis</p></div>
-                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">2</span></div><h3 class="font-bold text-lg">Design & Quote</h3><p class="text-sm text-gray-500 dark:text-gray-400">Custom system design + ROI projection</p></div>
-                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">3</span></div><h3 class="font-bold text-lg">Installation</h3><p class="text-sm text-gray-500 dark:text-gray-400">Professional setup & dashboard integration</p></div>
-                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">4</span></div><h3 class="font-bold text-lg">Training & Launch</h3><p class="text-sm text-gray-500 dark:text-gray-400">Staff training & ongoing support</p></div>
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">1</span></div><h3 class="font-bold text-lg text-gray-900 dark:text-white">Consultation</h3><p class="text-sm text-gray-500 dark:text-gray-400">Free farm assessment & needs analysis</p></div>
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">2</span></div><h3 class="font-bold text-lg text-gray-900 dark:text-white">Design & Quote</h3><p class="text-sm text-gray-500 dark:text-gray-400">Custom system design + ROI projection</p></div>
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">3</span></div><h3 class="font-bold text-lg text-gray-900 dark:text-white">Installation</h3><p class="text-sm text-gray-500 dark:text-gray-400">Professional setup & dashboard integration</p></div>
+                    <div class="process-step text-center p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-md"><div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl font-black text-primary">4</span></div><h3 class="font-bold text-lg text-gray-900 dark:text-white">Training & Launch</h3><p class="text-sm text-gray-500 dark:text-gray-400">Staff training & ongoing support</p></div>
                 </div>
             </div>
         </section>
@@ -840,9 +910,9 @@
                     <p class="text-gray-600 dark:text-gray-300 mt-4">Choose the level of support that fits your farm's needs</p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition"><div class="text-primary text-3xl mb-3"><i class="fas fa-life-ring"></i></div><h3 class="text-xl font-bold">Basic Care</h3><p class="text-3xl font-black text-primary my-3">$99<span class="text-sm text-gray-500">/mo</span></p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ Email support</li><li>✓ Dashboard updates</li><li>✓ Monthly health report</li><li>✗ On-site visits</li></ul><a href="#" class="mt-6 inline-block border border-primary text-primary px-5 py-2 rounded-full hover:bg-primary hover:text-white transition">Select</a></div>
-                    <div class="bg-primary/5 dark:bg-primary/10 rounded-2xl p-6 text-center border-2 border-primary relative hover:shadow-xl transition"><div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white text-xs px-3 py-1 rounded-full">Most Popular</div><div class="text-primary text-3xl mb-3"><i class="fas fa-shield-alt"></i></div><h3 class="text-xl font-bold">Pro Support</h3><p class="text-3xl font-black text-primary my-3">$249<span class="text-sm text-gray-500">/mo</span></p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ 24/7 priority support</li><li>✓ Quarterly on-site visit</li><li>✓ Real-time monitoring</li><li>✓ Discounted parts</li></ul><a href="#" class="mt-6 inline-block bg-primary text-white px-5 py-2 rounded-full hover:bg-secondary transition">Select</a></div>
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition"><div class="text-primary text-3xl mb-3"><i class="fas fa-crown"></i></div><h3 class="text-xl font-bold">Enterprise</h3><p class="text-3xl font-black text-primary my-3">Custom</p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ Dedicated account manager</li><li>✓ Unlimited on-site visits</li><li>✓ Custom integration</li><li>✓ 2-hour response SLA</li></ul><a href="#" class="mt-6 inline-block border border-primary text-primary px-5 py-2 rounded-full hover:bg-primary hover:text-white transition">Contact us</a></div>
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition"><div class="text-primary text-3xl mb-3"><i class="fas fa-life-ring"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Basic Care</h3><p class="text-3xl font-black text-primary my-3">$99<span class="text-sm text-gray-500 dark:text-gray-300">/mo</span></p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ Email support</li><li>✓ Dashboard updates</li><li>✓ Monthly health report</li><li>✗ On-site visits</li></ul><a href="#" class="mt-6 inline-block border border-primary text-primary px-5 py-2 rounded-full hover:bg-primary hover:text-white transition">Select</a></div>
+                    <div class="bg-primary/5 dark:bg-primary/10 rounded-2xl p-6 text-center border-2 border-primary relative hover:shadow-xl transition"><div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white text-xs px-3 py-1 rounded-full">Most Popular</div><div class="text-primary text-3xl mb-3"><i class="fas fa-shield-alt"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Pro Support</h3><p class="text-3xl font-black text-primary my-3">$249<span class="text-sm text-gray-500 dark:text-gray-300">/mo</span></p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ 24/7 priority support</li><li>✓ Quarterly on-site visit</li><li>✓ Real-time monitoring</li><li>✓ Discounted parts</li></ul><a href="#" class="mt-6 inline-block bg-primary text-white px-5 py-2 rounded-full hover:bg-secondary transition">Select</a></div>
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition"><div class="text-primary text-3xl mb-3"><i class="fas fa-crown"></i></div><h3 class="text-xl font-bold text-gray-900 dark:text-white">Enterprise</h3><p class="text-3xl font-black text-primary my-3">Custom</p><ul class="text-sm space-y-2 text-gray-600 dark:text-gray-300"><li>✓ Dedicated account manager</li><li>✓ Unlimited on-site visits</li><li>✓ Custom integration</li><li>✓ 2-hour response SLA</li></ul><a href="#" class="mt-6 inline-block border border-primary text-primary px-5 py-2 rounded-full hover:bg-primary hover:text-white transition">Contact us</a></div>
                 </div>
             </div>
         </section>
@@ -852,7 +922,7 @@
             <div class="max-w-5xl mx-auto px-4 text-center">
                 <i class="fas fa-quote-left text-4xl text-primary opacity-50 mb-4"></i>
                 <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-200 italic max-w-3xl mx-auto">"HydroFeed's installation and training team had us up and running in 3 days. The dashboard integration for our feed deliveries has saved us 40% on labor costs."</p>
-                <div class="mt-6"><div class="font-bold text-gray-900 dark:text-white">— Michael Rodriguez, Dairy Farm Owner</div><div class="text-sm text-gray-500">California, USA</div></div>
+                <div class="mt-6"><div class="font-bold text-gray-900 dark:text-white">— Michael Rodriguez, Dairy Farm Owner</div><div class="text-sm text-gray-500 dark:text-gray-400">California, USA</div></div>
             </div>
         </section>
 
@@ -874,19 +944,8 @@
     <footer class="bg-white dark:bg-gray-900 pt-12 pb-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:grid md:grid-cols-4 gap-8 mb-10">
-                <div>
-                    <a href="#" class="logo flex items-center gap-2 mb-4 group">
-                        <i class="fas fa-seedling text-2xl text-primary"></i>
-                        <span class="logo-text">HydroFeed</span>
-                    </a>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p>
-                    <div class="flex gap-3">
-                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-twitter text-xs"></i></a>
-                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-instagram text-xs"></i></a>
-                        <a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-linkedin-in text-xs"></i></a>
-                    </div>
-                </div>
-                <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="index.html" class="hover:text-primary transition">Home</a></li><li><a href="about.html" class="hover:text-primary transition">About Us</a></li><li><a href="products.html" class="hover:text-primary transition">Products</a></li><li><a href="services.html" class="hover:text-primary transition">Services</a></li><li><a href="contact.html" class="hover:text-primary transition">Contact</a></li></ul></div>
+                <div><a href="#" class="logo flex items-center gap-2 mb-4 group"><i class="fas fa-seedling text-2xl text-primary"></i><span class="logo-text">HydroFeed</span></a><p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p><div class="flex gap-3"><a href="#" class="social-icon"><i class="fab fa-twitter text-xs"></i></a><a href="#" class="social-icon"><i class="fab fa-instagram text-xs"></i></a><a href="#" class="social-icon"><i class="fab fa-linkedin-in text-xs"></i></a></div></div>
+                <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">Home</a></li><li><a href="#" class="hover:text-primary transition">About Us</a></li><li><a href="#" class="hover:text-primary transition">Products</a></li><li><a href="#" class="hover:text-primary transition">Plans</a></li><li><a href="#" class="hover:text-primary transition">Contact</a></li></ul></div>
                 <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Resources</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">ROI Calculator</a></li><li><a href="#" class="hover:text-primary transition">Feeding Guides</a></li><li><a href="#" class="hover:text-primary transition">Farmer Dashboard</a></li><li><a href="#" class="hover:text-primary transition">Support Center</a></li><li><a href="#" class="hover:text-primary transition">Blog</a></li></ul></div>
                 <div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Contact Info</h4><div class="space-y-3 text-gray-500 dark:text-gray-400 text-sm"><p><i class="fas fa-map-marker-alt text-primary mr-2"></i> San Francisco, CA</p><p><i class="fas fa-envelope text-primary mr-2"></i> <a href="mailto:hello@hydrofeed.com" class="hover:text-primary">hello@hydrofeed.com</a></p><p><i class="fas fa-phone text-primary mr-2"></i> <a href="tel:+18005554321" class="hover:text-primary">+1 (800) 555-4321</a></p><p><i class="fas fa-clock text-primary mr-2"></i> Mon-Fri: 9AM - 6PM EST</p></div></div>
             </div>

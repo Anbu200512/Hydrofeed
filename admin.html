@@ -159,6 +159,24 @@
             }
         }
         
+        /* Sidebar overlay for mobile */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         /* Navigation */
         .nav-item {
             display: flex;
@@ -209,6 +227,7 @@
         .data-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px;
         }
         .data-table th, .data-table td {
             padding: 12px;
@@ -238,6 +257,8 @@
             border-radius: 20px;
             font-size: 0.7rem;
             font-weight: 600;
+            display: inline-block;
+            white-space: nowrap;
         }
         .badge-success { background: rgba(43, 147, 72, 0.15); color: #2B9348; }
         .badge-warning { background: rgba(245, 158, 11, 0.15); color: #F59E0B; }
@@ -314,6 +335,7 @@
         @media (max-width: 1024px) { .mobile-menu-btn { display: flex; } }
         
         [dir="rtl"] .data-table th, [dir="rtl"] .data-table td { text-align: right; }
+        [dir="rtl"] .profile-menu { right: auto; left: 0; }
         
         /* Dark mode text fixes - NO BLACK TEXT ANYWHERE */
         .dark .text-gray-900 { color: #F1F5F9 !important; }
@@ -353,6 +375,8 @@
             max-width: 500px;
             width: 90%;
             padding: 1.5rem;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         .dark .modal-content {
             background: #1E293B;
@@ -372,15 +396,26 @@
             }
         }
         
+        /* Chart containers - responsive */
         canvas {
             max-height: 200px;
             width: 100% !important;
+        }
+        
+        /* Table wrapper for horizontal scroll */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 0 -0.25rem;
+            padding: 0 0.25rem;
         }
     </style>
 </head>
 <body>
 
 <div class="dashboard-container">
+    <!-- Sidebar Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+    
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -393,8 +428,8 @@
         </div>
         
         <nav class="py-4">
-            <div class="nav-item active" data-section="overview"><i class="fas fa-chart-pie"></i><span>Dashboard Overview</span></div>
-            <div class="nav-item" data-section="farms"><i class="fas fa-tractor"></i><span>Registered Farms</span></div>
+            <div class="nav-item active" data-section="overview"><i class="fas fa-chart-pie"></i><span>Overview</span></div>
+            <div class="nav-item" data-section="farms"><i class="fas fa-tractor"></i><span>Farms</span></div>
             <div class="nav-item" data-section="orders"><i class="fas fa-truck"></i><span>Feed Orders</span></div>
             <div class="nav-item" data-section="inventory"><i class="fas fa-boxes"></i><span>Tray Inventory</span></div>
             <div class="nav-item" data-section="users"><i class="fas fa-users"></i><span>Farmers</span></div>
@@ -415,7 +450,7 @@
                 <div class="flex items-center gap-3">
                     <button class="mobile-menu-btn action-btn-icon" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="pageTitle">Dashboard Overview</h1>
+                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="pageTitle">Overview</h1>
                         <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Welcome back, Admin</p>
                     </div>
                 </div>
@@ -452,32 +487,34 @@
                     <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-3">Tray Utilization by Farm Type</h3><canvas id="trayChart" height="200"></canvas></div>
                 </div>
                 
-                <div class="stat-card p-4 overflow-x-auto"><div class="flex justify-between items-center mb-4 flex-wrap gap-2"><h3 class="font-semibold text-gray-900 dark:text-white">Recent Feed Orders</h3><a href="#" class="text-primary text-sm hover:underline">View All</a></div>
-                <table class="data-table min-w-[550px]"><thead><tr><th>Order ID</th><th>Farm Name</th><th>Feed Type</th><th>Quantity</th><th>Status</th><th>Date</th></tr></thead><tbody>
-                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2841</td><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">240 trays</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-15</td></tr>
-                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2842</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Wheat Grass</td><td class="text-gray-700 dark:text-gray-300">180 trays</td><td><span class="badge badge-warning">In Transit</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-14</td></tr>
-                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2843</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Mixed Grain</td><td class="text-gray-700 dark:text-gray-300">320 trays</td><td><span class="badge badge-warning">Processing</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-14</td></tr>
-                    <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2844</td><td class="text-gray-700 dark:text-gray-300">Blue Sky Ranch</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">150 trays</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-13</td></tr>
-                </tbody></table></div>
+                <div class="stat-card p-4">
+                    <div class="flex justify-between items-center mb-4 flex-wrap gap-2"><h3 class="font-semibold text-gray-900 dark:text-white">Recent Feed Orders</h3><a href="#" class="text-primary text-sm hover:underline">View All</a></div>
+                    <div class="table-wrapper">
+                        <table class="data-table w-full"><thead><tr><th>Order ID</th><th>Farm Name</th><th>Feed Type</th><th>Quantity</th><th>Status</th><th>Date</th></tr></thead><tbody>
+                            <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2841</td><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">240 trays</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-15</td></tr>
+                            <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2842</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Wheat Grass</td><td class="text-gray-700 dark:text-gray-300">180 trays</td><td><span class="badge badge-warning">In Transit</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-14</td></tr>
+                            <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2843</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Mixed Grain</td><td class="text-gray-700 dark:text-gray-300">320 trays</td><td><span class="badge badge-warning">Processing</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-14</td></tr>
+                            <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2844</td><td class="text-gray-700 dark:text-gray-300">Blue Sky Ranch</td><td class="text-gray-700 dark:text-gray-300">Barley Fodder</td><td class="text-gray-700 dark:text-gray-300">150 trays</td><td><span class="badge badge-success">Delivered</span></td><td class="text-gray-700 dark:text-gray-300">2024-03-13</td></tr>
+                        </tbody></table>
+                    </div>
+                </div>
             </div>
             
             <!-- Farms Section -->
-            <div id="farmsSection" class="hidden"><div class="stat-card p-4 overflow-x-auto"><div class="flex justify-between items-center mb-4 flex-wrap gap-2"><h3 class="font-semibold text-gray-900 dark:text-white">Registered Farms</h3><button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-secondary transition">+ Add Farm</button></div>
-            <table class="data-table min-w-[650px]"><thead><tr><th>Farm Name</th><th>Owner</th><th>Location</th><th>Livestock</th><th>Active Trays</th><th>Status</th></tr></thead><tbody>
+            <div id="farmsSection" class="hidden"><div class="stat-card p-4"><div class="flex justify-between items-center mb-4 flex-wrap gap-2"><h3 class="font-semibold text-gray-900 dark:text-white">Registered Farms</h3><button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-secondary transition">+ Add Farm</button></div><div class="table-wrapper"><table class="data-table w-full"><thead><tr><th>Farm Name</th><th>Owner</th><th>Location</th><th>Livestock</th><th>Active Trays</th><th>Status</th></tr></thead><tbody>
                 <tr><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">John Anderson</td><td class="text-gray-700 dark:text-gray-300">Wisconsin</td><td class="text-gray-700 dark:text-gray-300">320 cows</td><td class="text-gray-700 dark:text-gray-300">480</td><td><span class="badge badge-success">Active</span></td></tr>
                 <tr><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Sarah Miller</td><td class="text-gray-700 dark:text-gray-300">Texas</td><td class="text-gray-700 dark:text-gray-300">520 cattle</td><td class="text-gray-700 dark:text-gray-300">720</td><td><span class="badge badge-success">Active</span></td></tr>
                 <tr><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Robert Chen</td><td class="text-gray-700 dark:text-gray-300">California</td><td class="text-gray-700 dark:text-gray-300">180 goats</td><td class="text-gray-700 dark:text-gray-300">240</td><td><span class="badge badge-success">Active</span></td></tr>
                 <tr><td class="text-gray-700 dark:text-gray-300">Blue Sky Ranch</td><td class="text-gray-700 dark:text-gray-300">Emily Davis</td><td class="text-gray-700 dark:text-gray-300">Colorado</td><td class="text-gray-700 dark:text-gray-300">420 sheep</td><td class="text-gray-700 dark:text-gray-300">360</td><td><span class="badge badge-warning">Pending</span></td></tr>
-            </tbody></table></div></div>
+            </tbody></table></div></div></div>
             
             <!-- Feed Orders Section -->
-            <div id="ordersSection" class="hidden"><div class="stat-card p-4 overflow-x-auto"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">All Feed Orders</h3>
-            <table class="data-table min-w-[600px]"><thead><td><th>Order ID</th><th>Farm</th><th>Type</th><th>Trays</th><th>Delivery Date</th><th>Status</th></tr></thead><tbody>
+            <div id="ordersSection" class="hidden"><div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">All Feed Orders</h3><div class="table-wrapper"><table class="data-table w-full"><thead><tr><th>Order ID</th><th>Farm</th><th>Type</th><th>Trays</th><th>Delivery Date</th><th>Status</th></tr></thead><tbody>
                 <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2841</td><td class="text-gray-700 dark:text-gray-300">Green Valley</td><td class="text-gray-700 dark:text-gray-300">Barley</td><td class="text-gray-700 dark:text-gray-300">240</td><td class="text-gray-700 dark:text-gray-300">Mar 15</td><td><span class="badge badge-success">Completed</span></td></tr>
                 <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2842</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Wheat</td><td class="text-gray-700 dark:text-gray-300">180</td><td class="text-gray-700 dark:text-gray-300">Mar 17</td><td><span class="badge badge-warning">Pending</span></td></tr>
                 <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2843</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Mixed</td><td class="text-gray-700 dark:text-gray-300">320</td><td class="text-gray-700 dark:text-gray-300">Mar 18</td><td><span class="badge badge-warning">Processing</span></td></tr>
                 <tr><td class="text-gray-700 dark:text-gray-300">#FOD-2844</td><td class="text-gray-700 dark:text-gray-300">Blue Sky</td><td class="text-gray-700 dark:text-gray-300">Barley</td><td class="text-gray-700 dark:text-gray-300">150</td><td class="text-gray-700 dark:text-gray-300">Mar 20</td><td><span class="badge badge-info">Confirmed</span></td></tr>
-            </tbody></table></div></div>
+            </tbody></table></div></div></div>
             
             <!-- Inventory Section -->
             <div id="inventorySection" class="hidden"><div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
@@ -486,18 +523,17 @@
                 <div class="stat-card text-center"><i class="fas fa-box text-3xl text-yellow-500 mb-2"></i><p class="text-2xl font-bold text-gray-900 dark:text-white">1,686</p><p class="text-sm text-gray-500 dark:text-gray-400">Available</p></div>
             </div>
             <div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Tray Inventory by Farm</h3>
-            <div class="space-y-3"><div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Green Valley Dairy</span><span class="text-gray-600 dark:text-gray-400">480 / 600 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div>
+            <div class="space-y-4"><div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Green Valley Dairy</span><span class="text-gray-600 dark:text-gray-400">480 / 600 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div>
             <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Sunrise Ranch</span><span class="text-gray-600 dark:text-gray-400">720 / 900 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div>
             <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Oakwood Farm</span><span class="text-gray-600 dark:text-gray-400">240 / 300 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div>
             <div><div class="flex justify-between text-sm"><span class="text-gray-700 dark:text-gray-300">Blue Sky Ranch</span><span class="text-gray-600 dark:text-gray-400">360 / 450 trays</span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div class="bg-primary h-2 rounded-full" style="width:80%"></div></div></div></div></div></div>
             
             <!-- Farmers Section -->
-            <div id="usersSection" class="hidden"><div class="stat-card p-4 overflow-x-auto"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Registered Farmers</h3>
-            <table class="data-table min-w-[550px]"><thead><tr><th>Name</th><th>Email</th><th>Farm</th><th>Joined</th><th>Status</th></tr></thead><tbody>
-                <tr><td class="text-gray-700 dark:text-gray-300">John Anderson</td><td class="text-gray-700 dark:text-gray-300">john@greenvalley.com</td><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">Jan 2024</td><td><span class="badge badge-success">Active</span></td></tr>
-                <tr><td class="text-gray-700 dark:text-gray-300">Sarah Miller</td><td class="text-gray-700 dark:text-gray-300">sarah@sunrise.com</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Feb 2024</td><td><span class="badge badge-success">Active</span></td></tr>
-                <tr><td class="text-gray-700 dark:text-gray-300">Robert Chen</td><td class="text-gray-700 dark:text-gray-300">robert@oakwood.com</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Dec 2023</td><td><span class="badge badge-success">Active</span></td></tr>
-            </tbody></table></div></div>
+            <div id="usersSection" class="hidden"><div class="stat-card p-4"><h3 class="font-semibold text-gray-900 dark:text-white mb-4">Registered Farmers</h3><div class="table-wrapper"><table class="data-table w-full"><thead><tr><th>Name</th><th>Email</th><th>Farm</th><th>Joined</th><th>Status</th></tr></thead><tbody>
+                <tr><td class="text-gray-700 dark:text-gray-300">John Anderson</td><td class="text-gray-700 dark:text-gray-300">john@greenvalley.com</td><td class="text-gray-700 dark:text-gray-300">Green Valley Dairy</td><td class="text-gray-700 dark:text-gray-300">Jan 2024</td><td class="text-gray-700 dark:text-gray-300"><span class="badge badge-success">Active</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">Sarah Miller</td><td class="text-gray-700 dark:text-gray-300">sarah@sunrise.com</td><td class="text-gray-700 dark:text-gray-300">Sunrise Ranch</td><td class="text-gray-700 dark:text-gray-300">Feb 2024</td><td class="text-gray-700 dark:text-gray-300"><span class="badge badge-success">Active</span></td></tr>
+                <tr><td class="text-gray-700 dark:text-gray-300">Robert Chen</td><td class="text-gray-700 dark:text-gray-300">robert@oakwood.com</td><td class="text-gray-700 dark:text-gray-300">Oakwood Farm</td><td class="text-gray-700 dark:text-gray-300">Dec 2023</td><td class="text-gray-700 dark:text-gray-300"><span class="badge badge-success">Active</span></td></tr>
+            </tbody></table></div></div></div>
             
             <!-- Reports Section -->
             <div id="reportsSection" class="hidden"><div class="stat-card p-6 text-center"><i class="fas fa-chart-line text-5xl text-primary mb-4"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white">Financial Reports</h3><p class="text-gray-500 dark:text-gray-400 mt-2">Download monthly, quarterly, and annual reports</p><div class="flex flex-wrap justify-center gap-3 mt-6"><button class="bg-primary text-white px-5 py-2 rounded-lg">Monthly Report</button><button class="border border-primary text-primary px-5 py-2 rounded-lg hover:bg-primary hover:text-white transition">Quarterly Report</button><button class="border border-gray-300 text-gray-700 dark:text-gray-300 px-5 py-2 rounded-lg hover:bg-primary hover:text-white transition">Annual Report</button></div></div></div>
@@ -532,20 +568,29 @@
     function refreshCharts() {
         const isDark = document.documentElement.classList.contains('dark');
         const textColor = isDark ? '#F1F5F9' : '#1F2937';
+        const gridColor = isDark ? '#334155' : '#e5e7eb';
         
         if (ordersChart) ordersChart.destroy();
         if (trayChart) trayChart.destroy();
         
-        ordersChart = new Chart(document.getElementById('ordersChart'), {
-            type: 'line',
-            data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ label: 'Feed Orders', data: [145, 168, 192, 210, 245, 284], borderColor: '#2B9348', backgroundColor: 'rgba(43,147,72,0.1)', fill: true, tension: 0.3 }] },
-            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: textColor } } } }
-        });
-        trayChart = new Chart(document.getElementById('trayChart'), {
-            type: 'doughnut',
-            data: { labels: ['Dairy Farms', 'Cattle Ranches', 'Goat Farms', 'Sheep Farms'], datasets: [{ data: [42, 35, 15, 8], backgroundColor: ['#2B9348', '#4ADE80', '#1E7E34', '#86EFAC'], borderWidth: 0 }] },
-            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { color: textColor } } } }
-        });
+        const ordersCtx = document.getElementById('ordersChart');
+        const trayCtx = document.getElementById('trayChart');
+        
+        if (ordersCtx) {
+            ordersChart = new Chart(ordersCtx, {
+                type: 'line',
+                data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ label: 'Feed Orders', data: [145, 168, 192, 210, 245, 284], borderColor: '#2B9348', backgroundColor: 'rgba(43,147,72,0.1)', fill: true, tension: 0.3 }] },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: textColor } } }, scales: { x: { ticks: { color: textColor }, grid: { color: gridColor } }, y: { ticks: { color: textColor }, grid: { color: gridColor } } } }
+            });
+        }
+        
+        if (trayCtx) {
+            trayChart = new Chart(trayCtx, {
+                type: 'doughnut',
+                data: { labels: ['Dairy Farms', 'Cattle Ranches', 'Goat Farms', 'Sheep Farms'], datasets: [{ data: [42, 35, 15, 8], backgroundColor: ['#2B9348', '#4ADE80', '#1E7E34', '#86EFAC'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { color: textColor } } } }
+            });
+        }
     }
     
     function toggleDirection() {
@@ -554,7 +599,17 @@
     }
     
     function toggleMobileSidebar() {
-        document.getElementById('sidebar').classList.toggle('mobile-open');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.toggle('mobile-open');
+        overlay.classList.toggle('active');
+    }
+    
+    function closeMobileSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('active');
     }
     
     function switchToSection(section) {
@@ -578,10 +633,10 @@
         if (section === 'reports') document.getElementById('reportsSection').classList.remove('hidden');
         if (section === 'settings') document.getElementById('settingsSection').classList.remove('hidden');
         
-        const titles = { overview: 'Dashboard Overview', farms: 'Registered Farms', orders: 'Feed Orders', inventory: 'Tray Inventory', users: 'Farmers', reports: 'Reports', settings: 'Settings' };
+        const titles = { overview: 'Overview', farms: 'Farms', orders: 'Feed', inventory: 'Tray', users: 'Farmers', reports: 'Reports', settings: 'Settings' };
         document.getElementById('pageTitle').innerText = titles[section] || 'Dashboard';
         
-        if (window.innerWidth <= 1024) document.getElementById('sidebar').classList.remove('mobile-open');
+        if (window.innerWidth <= 1024) closeMobileSidebar();
     }
     
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -617,11 +672,20 @@
     
     refreshCharts();
     
+    // Close sidebar when clicking outside on mobile
     document.addEventListener('click', function(e) {
         const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
         const menuBtn = e.target.closest('.mobile-menu-btn');
         if (window.innerWidth <= 1024 && sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuBtn) {
-            sidebar.classList.remove('mobile-open');
+            closeMobileSidebar();
+        }
+    });
+    
+    // Handle window resize - close mobile sidebar if screen becomes larger
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 1024) {
+            closeMobileSidebar();
         }
     });
 </script>

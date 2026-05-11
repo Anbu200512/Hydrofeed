@@ -416,13 +416,13 @@
         </div>
         
         <nav class="py-4">
-            <div class="nav-item active" data-section="overview"><i class="fas fa-chart-pie"></i><span>Farm Overview</span></div>
-            <div class="nav-item" data-section="feedOrders"><i class="fas fa-truck"></i><span>Feed Deliveries</span></div>
-            <div class="nav-item" data-section="inventory"><i class="fas fa-boxes"></i><span>Tray Inventory</span></div>
-            <div class="nav-item" data-section="schedule"><i class="fas fa-calendar-alt"></i><span>Feeding Schedule</span></div>
-            <div class="nav-item" data-section="nutrition"><i class="fas fa-chart-line"></i><span>Nutritional Data</span></div>
-            <div class="nav-item" data-section="orders"><i class="fas fa-shopping-cart"></i><span>Adjust Orders</span></div>
-            <div class="nav-item" data-section="roi"><i class="fas fa-calculator"></i><span>ROI Calculator</span></div>
+            <div class="nav-item active" data-section="overview"><i class="fas fa-chart-pie"></i><span>Overview</span></div>
+            <div class="nav-item" data-section="feedOrders"><i class="fas fa-truck"></i><span>Feed</span></div>
+            <div class="nav-item" data-section="inventory"><i class="fas fa-boxes"></i><span>Tray</span></div>
+            <div class="nav-item" data-section="schedule"><i class="fas fa-calendar-alt"></i><span>Schedule</span></div>
+            <div class="nav-item" data-section="nutrition"><i class="fas fa-chart-line"></i><span>Nutritional</span></div>
+            <div class="nav-item" data-section="orders"><i class="fas fa-shopping-cart"></i><span>Orders</span></div>
+            <div class="nav-item" data-section="roi"><i class="fas fa-calculator"></i><span>ROI</span></div>
         </nav>
         
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
@@ -438,8 +438,8 @@
                 <div class="flex items-center gap-3">
                     <button class="mobile-menu-btn action-btn-icon" onclick="toggleMobileSidebar()"><i class="fas fa-bars"></i></button>
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="pageTitle">Farm Overview</h1>
-                        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Welcome back, John! Your farm is thriving</p>
+                        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white" id="pageTitle">Overview</h1>
+                        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Welcome back, John!</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -520,7 +520,7 @@
             <div class="space-y-4"><div class="flex flex-wrap items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg gap-3"><div><p class="font-medium text-gray-800 dark:text-gray-200">Barley Fodder</p><p class="text-sm text-gray-500">Next: Mar 18, 2025</p></div><div class="flex items-center gap-2"><button class="qty-btn" onclick="changeQty('barley', -10)"><i class="fas fa-minus"></i></button><span id="barleyQty" class="text-lg font-semibold text-gray-900 dark:text-white w-12 text-center">240</span><button class="qty-btn" onclick="changeQty('barley', 10)"><i class="fas fa-plus"></i></button><span class="text-sm text-gray-500 ml-1">trays</span></div></div>
             <div class="flex flex-wrap items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg gap-3"><div><p class="font-medium text-gray-800 dark:text-gray-200">Wheat Grass</p><p class="text-sm text-gray-500">Next: Mar 22, 2025</p></div><div class="flex items-center gap-2"><button class="qty-btn" onclick="changeQty('wheat', -10)"><i class="fas fa-minus"></i></button><span id="wheatQty" class="text-lg font-semibold text-gray-900 dark:text-white w-12 text-center">180</span><button class="qty-btn" onclick="changeQty('wheat', 10)"><i class="fas fa-plus"></i></button><span class="text-sm text-gray-500 ml-1">trays</span></div></div>
             <div class="flex flex-wrap items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg gap-3"><div><p class="font-medium text-gray-800 dark:text-gray-200">Mixed Grain</p><p class="text-sm text-gray-500">Next: Mar 25, 2025</p></div><div class="flex items-center gap-2"><button class="qty-btn" onclick="changeQty('mixed', -10)"><i class="fas fa-minus"></i></button><span id="mixedQty" class="text-lg font-semibold text-gray-900 dark:text-white w-12 text-center">320</span><button class="qty-btn" onclick="changeQty('mixed', 10)"><i class="fas fa-plus"></i></button><span class="text-sm text-gray-500 ml-1">trays</span></div></div>
-            <button class="w-full bg-primary text-white py-3 rounded-lg mt-4 hover:bg-secondary transition" onclick="saveOrderChanges()">Save Changes & Update Recurring Order</button></div></div></div>
+            <button class="w-full bg-primary text-white py-3 rounded-lg mt-4 hover:bg-secondary transition" onclick="saveOrderChanges()">Save Changes</button></div></div></div>
             
             <!-- ROI Calculator Section -->
             <div id="roiSection" class="hidden"><div class="stat-card p-6"><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Your Farm ROI Calculator</h3>
@@ -609,7 +609,7 @@
         if (section === 'orders') document.getElementById('ordersSection').classList.remove('hidden');
         if (section === 'roi') document.getElementById('roiSection').classList.remove('hidden');
         
-        const titles = { overview: 'Farm Overview', feedOrders: 'Feed Deliveries', inventory: 'Tray Inventory', schedule: 'Feeding Schedule', nutrition: 'Nutritional Data', orders: 'Adjust Orders', roi: 'ROI Calculator' };
+        const titles = { overview: 'Overview', feedOrders: 'Feed', inventory: 'Tray', schedule: 'Schedule', nutrition: 'Nutritional', orders: 'Orders', roi: 'ROI' };
         document.getElementById('pageTitle').innerText = titles[section] || 'Dashboard';
         
         if (window.innerWidth <= 1024) document.getElementById('sidebar').classList.remove('mobile-open');

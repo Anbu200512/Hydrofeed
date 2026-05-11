@@ -646,6 +646,28 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        .social-icon {
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            background: #f3f4f6;
+            color: #4B5563;
+        }
+        
+        .dark .social-icon {
+            background: #1E293B;
+            color: #94A3B8;
+        }
+        
+        .social-icon:hover {
+            background: #2B9348 !important;
+            color: white !important;
+        }
         
         /* Dark mode text fixes - no black text */
         .dark .text-gray-900 { color: #F1F5F9 !important; }
@@ -867,44 +889,155 @@
         </section>
 
         <!-- Water & Environmental Savings - Full grid no extra space -->
-        <section class="py-16 bg-gray-50 dark:bg-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="stats-grid">
-                    <div class="rio-card text-center overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=500&h=180&fit=crop" alt="Water Savings" class="service-image"></div><div class="p-5"><i class="fas fa-tint text-4xl text-primary mb-2"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Water Savings</h3><p class="text-3xl font-black text-primary">70%</p><p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Less water compared to traditional fodder</p><div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width:70%"></div></div></div></div>
-                    <div class="rio-card text-center overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&h=180&fit=crop" alt="Land Efficiency" class="service-image"></div><div class="p-5"><i class="fas fa-leaf text-4xl text-primary mb-2"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Land Efficiency</h3><p class="text-3xl font-black text-primary">90%</p><p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Less land required for same feed output</p><div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width:90%"></div></div></div></div>
-                    <div class="rio-card text-center overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=500&h=180&fit=crop" alt="Carbon Footprint" class="service-image"></div><div class="p-5"><i class="fas fa-cloud-sun text-4xl text-primary mb-2"></i><h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Carbon Reduction</h3><p class="text-3xl font-black text-primary">60%</p><p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Lower transport & production emissions</p><div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width:60%"></div></div></div></div>
+       <section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="stats-grid grid md:grid-cols-3 gap-6">
+            <!-- Card 1 - Water Savings -->
+            <div class="rio-card text-center overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-all duration-300">
+                <div class="image-container h-48 overflow-hidden">
+                    <img src="images/a4.jpg" alt="Water Savings" class="service-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5">
+                    <i class="fas fa-tint text-4xl text-primary mb-2"></i>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Water Savings</h3>
+                    <p class="text-3xl font-black text-primary">70%</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Less water compared to traditional fodder</p>
+                    <div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full rounded-full" style="width:70%"></div>
+                    </div>
                 </div>
             </div>
-        </section>
+            
+            <!-- Card 2 - Land Efficiency -->
+            <div class="rio-card text-center overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-all duration-300">
+                <div class="image-container h-48 overflow-hidden">
+                    <img src="images/a5.jpg" alt="Land Efficiency" class="service-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5">
+                    <i class="fas fa-leaf text-4xl text-primary mb-2"></i>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Land Efficiency</h3>
+                    <p class="text-3xl font-black text-primary">90%</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Less land required for same feed output</p>
+                    <div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full rounded-full" style="width:90%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card 3 - Carbon Reduction -->
+            <div class="rio-card text-center overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-all duration-300">
+                <div class="image-container h-48 overflow-hidden">
+                    <img src="images/h1.jpg" alt="Carbon Footprint" class="service-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5">
+                    <i class="fas fa-cloud-sun text-4xl text-primary mb-2"></i>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Carbon Reduction</h3>
+                    <p class="text-3xl font-black text-primary">60%</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Lower transport & production emissions</p>
+                    <div class="mt-3 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div class="bg-primary h-full rounded-full" style="width:60%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        <!-- ROI Comparison Chart -->
-        <section class="py-16 bg-white dark:bg-gray-900">
-            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-2xl mx-auto mb-10">
-                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">Traditional vs. Hydroponic</h2>
-                    <p class="text-gray-600 dark:text-gray-300 mt-3">5-year cost comparison per 100 livestock</p>
+<section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-primary font-semibold text-sm uppercase tracking-wider">Success Stories</span>
+            <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Real Farm Results</h2>
+            <p class="text-gray-600 dark:text-gray-300 mt-3">See how other farmers achieved ROI with HydroFeed</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Case Study 1 - Dairy Farm -->
+            <div class="case-study-card rio-card overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-all duration-300">
+                <div class="image-container h-48 overflow-hidden">
+                    <img src="images/a1.jpg" alt="Dairy Farm" class="service-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                 </div>
-                <div class="rio-card p-5">
-                    <canvas id="roiChart" height="240"></canvas>
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-tractor text-primary"></i>
+                        <h3 class="font-bold text-gray-900 dark:text-white">Dairy Farm, WI</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">200 cows • HydroStack Max</p>
+                    <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Investment:</span>
+                            <span class="font-semibold text-gray-900 dark:text-white">$18,500</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Payback:</span>
+                            <span class="font-semibold text-primary">8 months</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Annual savings:</span>
+                            <span class="font-semibold text-primary">$31,200</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-
-        <!-- Case Studies with images -->
-        <section class="py-16 bg-gray-50 dark:bg-gray-800">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-2xl mx-auto mb-12">
-                    <span class="text-primary font-semibold text-sm uppercase tracking-wider">Success Stories</span>
-                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mt-2">Real Farm Results</h2>
-                    <p class="text-gray-600 dark:text-gray-300 mt-3">See how other farmers achieved ROI with HydroFeed</p>
+            
+            <!-- Case Study 2 - Beef Ranch -->
+            <div class="case-study-card rio-card overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-all duration-300">
+                <div class="image-container h-48 overflow-hidden">
+                    <img src="images/a2.jpg" alt="Beef Ranch" class="service-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                 </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="case-study-card rio-card overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1595433707802-3dc8f0fed1e5?w=500&h=180&fit=crop" alt="Dairy Farm" class="service-image"></div><div class="p-5"><div class="flex items-center gap-2 mb-2"><i class="fas fa-tractor text-primary"></i><h3 class="font-bold text-gray-900 dark:text-white">Dairy Farm, WI</h3></div><p class="text-sm text-gray-600 dark:text-gray-400">200 cows • HydroStack Max</p><div class="mt-3 space-y-1 text-sm"><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Investment:</span><span class="font-semibold text-gray-900 dark:text-white">$18,500</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Payback:</span><span class="font-semibold text-primary">8 months</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Annual savings:</span><span class="font-semibold text-primary">$31,200</span></div></div></div></div>
-                    <div class="case-study-card rio-card overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=500&h=180&fit=crop" alt="Beef Ranch" class="service-image"></div><div class="p-5"><div class="flex items-center gap-2 mb-2"><i class="fas fa-hat-cowboy text-primary"></i><h3 class="font-bold text-gray-900 dark:text-white">Beef Ranch, TX</h3></div><p class="text-sm text-gray-600 dark:text-gray-400">350 head • AgriTower Elite</p><div class="mt-3 space-y-1 text-sm"><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Investment:</span><span class="font-semibold text-gray-900 dark:text-white">$42,000</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Payback:</span><span class="font-semibold text-primary">14 months</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Annual savings:</span><span class="font-semibold text-primary">$47,500</span></div></div></div></div>
-                    <div class="case-study-card rio-card overflow-hidden"><div class="image-container"><img src="https://images.unsplash.com/photo-1535268647677-300dbf3d6d1b?w=500&h=180&fit=crop" alt="Goat Farm" class="service-image"></div><div class="p-5"><div class="flex items-center gap-2 mb-2"><i class="fas fa-egg text-primary"></i><h3 class="font-bold text-gray-900 dark:text-white">Goat Farm, CA</h3></div><p class="text-sm text-gray-600 dark:text-gray-400">120 goats • HydroTray Pro</p><div class="mt-3 space-y-1 text-sm"><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Investment:</span><span class="font-semibold text-gray-900 dark:text-white">$8,200</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Payback:</span><span class="font-semibold text-primary">6 months</span></div><div class="flex justify-between"><span class="text-gray-600 dark:text-gray-400">Annual savings:</span><span class="font-semibold text-primary">$18,900</span></div></div></div></div>
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-hat-cowboy text-primary"></i>
+                        <h3 class="font-bold text-gray-900 dark:text-white">Beef Ranch, TX</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">350 head • AgriTower Elite</p>
+                    <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Investment:</span>
+                            <span class="font-semibold text-gray-900 dark:text-white">$42,000</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Payback:</span>
+                            <span class="font-semibold text-primary">14 months</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Annual savings:</span>
+                            <span class="font-semibold text-primary">$47,500</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+            
+            <!-- Case Study 3 - Goat Farm -->
+            <div class="case-study-card rio-card overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-all duration-300">
+                <div class="image-container h-48 overflow-hidden">
+                    <img src="images/a3.jpg" alt="Goat Farm" class="service-image w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-egg text-primary"></i>
+                        <h3 class="font-bold text-gray-900 dark:text-white">Goat Farm, CA</h3>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">120 goats • HydroTray Pro</p>
+                    <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Investment:</span>
+                            <span class="font-semibold text-gray-900 dark:text-white">$8,200</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Payback:</span>
+                            <span class="font-semibold text-primary">6 months</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600 dark:text-gray-400">Annual savings:</span>
+                            <span class="font-semibold text-primary">$18,900</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- CTA Section -->
         <section class="py-16">
@@ -921,17 +1054,8 @@
     <div class="green-line"></div>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-900 pt-10 pb-5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:grid md:grid-cols-4 gap-6 mb-8">
-                <div><a href="#" class="logo flex items-center gap-2 mb-3"><i class="fas fa-seedling text-2xl text-primary"></i><span class="logo-text">HydroFeed</span></a><p class="text-gray-600 dark:text-gray-400 text-sm mb-3">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p><div class="flex gap-2"><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-twitter text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-instagram text-xs"></i></a><a href="#" class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-linkedin-in text-xs"></i></a></div></div>
-                <div><h4 class="font-bold mb-3 text-gray-900 dark:text-white">Quick Links</h4><ul class="space-y-1 text-gray-500 dark:text-gray-400 text-sm"><li><a href="index.html" class="hover:text-primary transition">Home</a></li><li><a href="about.html" class="hover:text-primary transition">About Us</a></li><li><a href="products.html" class="hover:text-primary transition">Products</a></li><li><a href="services.html" class="hover:text-primary transition">Services</a></li><li><a href="rio.html" class="hover:text-primary transition">RIO</a></li></ul></div>
-                <div><h4 class="font-bold mb-3 text-gray-900 dark:text-white">Resources</h4><ul class="space-y-1 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">ROI Calculator</a></li><li><a href="#" class="hover:text-primary transition">Feeding Guides</a></li><li><a href="#" class="hover:text-primary transition">Farmer Dashboard</a></li><li><a href="#" class="hover:text-primary transition">Support Center</a></li></ul></div>
-                <div><h4 class="font-bold mb-3 text-gray-900 dark:text-white">Contact</h4><div class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><p><i class="fas fa-map-marker-alt text-primary mr-2"></i> San Francisco, CA</p><p><i class="fas fa-envelope text-primary mr-2"></i> <a href="mailto:hello@hydrofeed.com" class="hover:text-primary">hello@hydrofeed.com</a></p><p><i class="fas fa-phone text-primary mr-2"></i> <a href="tel:+18005554321" class="hover:text-primary">+1 (800) 555-4321</a></p></div></div>
-            </div>
-            <div class="pt-4 border-t border-gray-200 dark:border-gray-800 text-center text-gray-400 text-xs">© 2025 HydroFeed — Sustainable Hydroponic Fodder & Livestock Feed Supply. All rights reserved.</div>
-        </div>
-    </footer>
+           <footer class="bg-white dark:bg-gray-900 pt-12 pb-6"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex flex-col md:grid md:grid-cols-4 gap-8 mb-10"><div><a href="#" class="logo flex items-center gap-2 mb-4 group"><i class="fas fa-seedling text-2xl text-primary"></i><span class="logo-text">HydroFeed</span></a><p class="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">Sustainable hydroponic fodder systems and smart dashboard solutions for modern livestock farms.</p><div class="flex gap-3"><a href="#" class="social-icon"><i class="fab fa-twitter text-xs"></i></a><a href="#" class="social-icon"><i class="fab fa-instagram text-xs"></i></a><a href="#" class="social-icon"><i class="fab fa-linkedin-in text-xs"></i></a></div></div><div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">Home</a></li><li><a href="#" class="hover:text-primary transition">About Us</a></li><li><a href="#" class="hover:text-primary transition">Products</a></li><li><a href="#" class="hover:text-primary transition">Plans</a></li><li><a href="#" class="hover:text-primary transition">Contact</a></li></ul></div><div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Resources</h4><ul class="space-y-2 text-gray-500 dark:text-gray-400 text-sm"><li><a href="#" class="hover:text-primary transition">ROI Calculator</a></li><li><a href="#" class="hover:text-primary transition">Feeding Guides</a></li><li><a href="#" class="hover:text-primary transition">Farmer Dashboard</a></li><li><a href="#" class="hover:text-primary transition">Support Center</a></li><li><a href="#" class="hover:text-primary transition">Blog</a></li></ul></div><div><h4 class="font-bold mb-4 text-gray-900 dark:text-white">Contact Info</h4><div class="space-y-3 text-gray-500 dark:text-gray-400 text-sm"><p><i class="fas fa-map-marker-alt text-primary mr-2"></i> San Francisco, CA</p><p><i class="fas fa-envelope text-primary mr-2"></i> <a href="mailto:hello@hydrofeed.com" class="hover:text-primary">hello@hydrofeed.com</a></p><p><i class="fas fa-phone text-primary mr-2"></i> <a href="tel:+18005554321" class="hover:text-primary">+1 (800) 555-4321</a></p><p><i class="fas fa-clock text-primary mr-2"></i> Mon-Fri: 9AM - 6PM EST</p></div></div></div><div class="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 text-xs"><p>© 2025 HydroFeed — Sustainable Hydroponic Fodder & Livestock Feed Supply. All rights reserved.</p><div class="flex gap-6"><a href="#" class="hover:text-primary transition">Privacy Policy</a><a href="#" class="hover:text-primary transition">Terms of Service</a><a href="#" class="hover:text-primary transition">Cookie Policy</a></div></div></div></footer>
+
 
     <script>
         lucide.createIcons();
