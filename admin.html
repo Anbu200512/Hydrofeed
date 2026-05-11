@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>HydroFeed | Admin Dashboard - Farm Feed Management System</title>
-    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232B9348'%3E%3Cpath d='M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,7V13L16,10L11,7Z'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" href="images/hydrofeed_logo2.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -464,8 +464,10 @@
                             <div class="profile-menu-item" onclick="showNotificationModal()"><i class="fas fa-bell"></i><span>Notifications <span class="ml-2 bg-primary text-white text-xs px-1.5 rounded-full">3</span></span></div>
                             <div class="profile-menu-item" onclick="showSecurityModal()"><i class="fas fa-shield-alt"></i><span>Security</span></div>
                             <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                            <div class="profile-menu-item text-red-500 dark:text-red-400"><i class="fas fa-sign-out-alt"></i><span>Logout</span></div>
-                        </div>
+<div class="profile-menu-item text-red-500 dark:text-red-400 cursor-pointer" onclick="window.location.href='login.html'">
+    <i class="fas fa-sign-out-alt"></i>
+    <span>Logout</span>
+</div>                        </div>
                     </div>
                 </div>
             </div>
